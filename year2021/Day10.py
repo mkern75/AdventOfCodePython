@@ -1,4 +1,4 @@
-file = open("../data/year2021/day10.txt", "r")
+file = open("./data/year2021/day10.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 
 m = {"(": ")", "[": "]", "{": "}", "<": ">"}
