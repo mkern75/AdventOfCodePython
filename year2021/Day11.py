@@ -15,9 +15,9 @@ def check_flash(grid, r, c):
                     check_flash(grid, i, j)
 
 
-p1, p2 = 0, 0
+p1, p2 = -1, -1
 step, total = 0, 0
-while p1 == 0 or p2 == 0:
+while p1 == -1 or p2 == -1:
     step += 1
     grid = grid + 1
     for r in range(10):
