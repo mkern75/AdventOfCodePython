@@ -1,4 +1,4 @@
-# AdventOfCodePyhton
+# AdventOfCodePython
 I've just started to study Python in a bit more detail.
 
 I always solve the puzzles first in Java; that's what I am comfortable with.
