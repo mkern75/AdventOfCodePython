@@ -9,7 +9,7 @@ def draw(g, x1, y1, x2, y2):
     dy = y2 - y1
     n = max(abs(dx), abs(dy))
     for i in range(n + 1):
-        g[x1 + i * dx / n][y1 + i * dy / n] += 1
+        g[x1 + i * dx // n][y1 + i * dy // n] += 1
 
 
 g = np.zeros((1000, 1000), dtype=int)
