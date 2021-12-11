@@ -11,23 +11,11 @@ for i in range(N):
     for r in range(5):
         boards[i][r] = [int(x) for x in lines[2 + i * 6 + r]]
 
-
-def is_bingo(board):
-    for i in range(5):
-        br, bc = True, True
-        for j in range(5):
-            br = br and (board[i][j] < 0)
-            bc = bc and (board[j][i] < 0)
-        if br or bc:
-            return True
-    return False
-
-
 for number in numbers:
     for i in range(N):
         if not bingo[i]:
             boards[i][boards[i] == number] = -1
-            if is_bingo(boards[i]):
+            if np.count_nonzero((boards[i] < 0).all(axis=0)) + np.count_nonzero((boards[i] < 0).all(axis=1)) > 0:
                 bingo[i] = True
                 if np.count_nonzero(bingo) in [1, N]:
                     print(number * np.sum(boards[i][boards[i] >= 0]))
