@@ -25,5 +25,5 @@ for line in lines:
     cave1, cave2 = line.split("-")
     conn[cave1].append(cave2)
     conn[cave2].append(cave1)
-print(count_paths(['start'], conn, False))
-print(count_paths(['start'], conn, True))
+print(count_paths(["start"], conn, False))
+print(count_paths(["start"], conn, True))
