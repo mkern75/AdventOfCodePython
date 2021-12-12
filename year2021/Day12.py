@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 file = open("./data/year2021/day12.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 
@@ -18,14 +20,10 @@ def count_paths(path, conn, allow_twice):
     return cnt
 
 
-conn = {}
+conn = defaultdict(list)
 for line in lines:
     cave1, cave2 = line.split("-")
-    if cave1 not in conn:
-        conn[cave1] = []
     conn[cave1].append(cave2)
-    if cave2 not in conn:
-        conn[cave2] = []
     conn[cave2].append(cave1)
 print(count_paths(['start'], conn, False))
 print(count_paths(['start'], conn, True))
