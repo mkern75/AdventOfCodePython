@@ -5,7 +5,8 @@ ans1 = -1
 P = set([])
 for line in lines:
     if "," in line:
-        P.add(map(int, line.split(",")))
+        x, y = map(int, line.split(","))
+        P.add((x, y))
     elif "fold along" in line:
         before, fold = line.split("=")
         fold = int(fold)
