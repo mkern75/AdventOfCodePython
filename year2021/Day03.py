@@ -1,4 +1,4 @@
-file = open("./data/year2021/day03.txt", "r")
+file = open("./year2021/data/day03.txt", "r")
 lines = [line.rstrip('\n').split(" ") for line in file]
 bin_nums = [n for line in lines for n in line]
 n_bits = len(bin_nums[0])

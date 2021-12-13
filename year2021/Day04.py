@@ -1,6 +1,6 @@
 import numpy as np
 
-file = open("./data/year2021/day04.txt", "r")
+file = open("./year2021/data/day04.txt", "r")
 lines = [line.rstrip('\n').split() for line in file]
 
 numbers = [int(x) for x in lines[0][0].split(",")]

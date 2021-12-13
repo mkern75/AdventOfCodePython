@@ -1,4 +1,4 @@
-file = open("./data/year2021/day02.txt", "r")
+file = open("./year2021/data/day02.txt", "r")
 lines = [line.rstrip('\n').split(" ") for line in file]
 
 h1, d1 = 0, 0

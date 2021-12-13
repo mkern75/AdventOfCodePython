@@ -1,6 +1,6 @@
 import sys
 
-file = open("./data/year2021/day07.txt", "r")
+file = open("./year2021/data/day07.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 p = [int(_) for _ in lines[0].split(",")]
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-file = open("./data/year2021/day06.txt", "r")
+file = open("./year2021/data/day06.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 fish = [int(f) for f in lines[0].split(",")]
 

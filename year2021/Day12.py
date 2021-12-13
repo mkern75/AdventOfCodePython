@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-file = open("./data/year2021/day12.txt", "r")
+file = open("./year2021/data/day12.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 
 

@@ -1,4 +1,4 @@
-file = open("./data/year2021/day01.txt", "r")
+file = open("./year2021/data/day01.txt", "r")
 depth = [int(line.rstrip('\n')) for line in file]
 n = len(depth)
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-file = open("./data/year2021/day09.txt", "r")
+file = open("./year2021/data/day09.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 grid = np.array([[int(c) for c in line] for line in lines])
 

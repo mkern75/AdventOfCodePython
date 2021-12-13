@@ -1,6 +1,6 @@
 import numpy as np
 
-file = open("./data/year2021/day05.txt", "r")
+file = open("./year2021/data/day05.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 
 

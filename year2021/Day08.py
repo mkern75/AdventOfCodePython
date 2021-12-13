@@ -1,6 +1,6 @@
 import itertools as it
 
-file = open("./data/year2021/day08.txt", "r")
+file = open("./year2021/data/day08.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 
 SEGMENTS = "abcdefg"

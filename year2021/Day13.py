@@ -1,4 +1,4 @@
-file = open("./data/year2021/day13.txt", "r")
+file = open("./year2021/data/day13.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 
 ans1 = -1
