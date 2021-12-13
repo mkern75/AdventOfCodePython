@@ -21,7 +21,9 @@ for line in lines:
             ans1 = len(P)
 print(ans1)
 
-for r in range(6):
-    for c in range(51):
+R = max([y for (x, y) in P]) + 1
+C = max([x for (x, y) in P]) + 1
+for r in range(R):
+    for c in range(C):
         print("#" if (c, r) in P else " ", end="")
     print("")
