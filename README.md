@@ -1,5 +1,3 @@
 # Advent Of Code - in Python
-I've just started to study Python in a bit more detail.
-
-I always solve the puzzles first in Java; that's what I am comfortable with.
-For the Python solutions, I spend some time to see what advanced functionality is on offer that could be used.
+My attempts to solve the Advent of Code puzzles in Python. 
+I've just started to study Python in a bit more detail, so I am playing around with it and try to learn some of its advanced functionality.
