@@ -137,3 +137,5 @@ dmypy.json
 .idea/workspace.xml
 .idea/AdventOfCodePython.iml
 data/load_data.sh
+data/
+.idea/
