@@ -1,7 +1,5 @@
 from itertools import permutations
 from collections import defaultdict
-import os
-print(os.getcwd())
 
 file = open("./year2015/data/day13.txt", "r")
 lines = [line.rstrip('\n') for line in file]
