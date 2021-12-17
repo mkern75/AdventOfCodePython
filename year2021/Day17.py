@@ -18,13 +18,13 @@ def simulate(vx, vy, trgt_x1, trgt_x2, trgt_y1, trgt_y2):
 
 
 s = lines[0].split(":")[1].split(", ")
-trgt_x1, trgt_x2 = map(int, s[0].replace("x=", "").split(".."))
-trgt_y1, trgt_y2 = map(int, s[1].replace("y=", "").split(".."))
+trgt_x_min, trgt_x_max = map(int, s[0].replace("x=", "").split(".."))
+trgt_y_min, trgt_y_max = map(int, s[1].replace("y=", "").split(".."))
 
 y_max, cnt = 0, 0
-for vx in range(1, trgt_x2 + 1):
-    for vy in range(trgt_y1, trgt_x2 + 1):
-        y_high = simulate(vx, vy, trgt_x1, trgt_x2, trgt_y1, trgt_y2)
+for vx in range(1, trgt_x_max + 1):
+    for vy in range(trgt_y_min, abs(trgt_y_min) + 1):
+        y_high = simulate(vx, vy, trgt_x_min, trgt_x_max, trgt_y_min, trgt_y_max)
         if y_high is not None:
             y_max = max(y_max, y_high)
             cnt += 1
