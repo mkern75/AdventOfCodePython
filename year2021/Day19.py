@@ -22,7 +22,7 @@ R3D = [[[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, -1]], [[
 
 
 def read_inputs(file):
-    inputs = []
+    inputs, beacon_coord = [], []
     for line in [line.rstrip('\n') for line in file]:
         if "scanner" in line:
             beacon_coord = []
@@ -93,12 +93,12 @@ def add(rotat1, rotat2, offs1, offs2):
 
 beacons = read_inputs(file)
 N = len(beacons)
-ROT = [None] * N  # rotation of scanner i vs scanner 0 (rotation)
-LIN = [None] * N  # offset of scanner i vs scanner 0 (linear component)
+ROT = [[]] * N  # rotation of scanner i vs scanner 0 (rotation)
+LIN = [[]] * N  # offset of scanner i vs scanner 0 (linear component)
 known = [False] * N  # do we know how to tranform the coordinates from scanner i into scanner 0 based coordinates
 coord = defaultdict(list)  # coordinates of scanner i / beacon j (i,j) expressed in the coordinate system of scanner 0
 
-ROT[0] = R3D[0]  # identity
+ROT[0] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]  # identity
 LIN[0] = [0, 0, 0]  # zero offset
 known[0] = True
 for i in range(len(beacons[0])):
@@ -120,13 +120,14 @@ while not stop:
                 if not known[j]:
                     matching_beacons, is_match = is_overlap(beacons, dist, i, j)
                     if is_match:
-                        # print("match between scanners ", i, j)
-                        rotation, offset = calc_rotation_and_offset(matching_beacons)
-                        rotation0, offset0 = add(rotation, ROT[i], offset, LIN[i])  # rotation/offset vs scanner 0
-                        ROT[j] = rotation0
-                        LIN[j] = offset0
+                        rotation, offset = calc_rotation_and_offset(matching_beacons)  # rotation/offset scanner j vs i
+                        ROT[j], LIN[j] = add(rotation, ROT[i], offset, LIN[i])  # rotation/offset vs scanner 0
                         known[j] = True
                         stop = False
+
+if sum([1 for k in known if not k]) > 0:  # check that all scanner positions are indeed known
+    print("Not all scanner positions determined: ", known)
+    assert False
 
 beacon_set = set()
 for s in range(N):
