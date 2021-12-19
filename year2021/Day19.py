@@ -96,13 +96,10 @@ N = len(beacons)
 ROT = [[]] * N  # rotation of scanner i vs scanner 0 (rotation)
 LIN = [[]] * N  # offset of scanner i vs scanner 0 (linear component)
 known = [False] * N  # do we know how to tranform the coordinates from scanner i into scanner 0 based coordinates
-coord = defaultdict(list)  # coordinates of scanner i / beacon j (i,j) expressed in the coordinate system of scanner 0
 
 ROT[0] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]  # identity
 LIN[0] = [0, 0, 0]  # zero offset
 known[0] = True
-for i in range(len(beacons[0])):
-    coord[(0, i)] = beacons[0][i]
 
 dist = defaultdict(set)  # manhattan distances of scanner i / beacon j (i,j) from othe beacons for same scanner
 for s in range(N):
