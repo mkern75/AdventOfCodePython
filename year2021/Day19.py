@@ -2,7 +2,7 @@ from collections import defaultdict
 
 file = open("./year2021/data/day19.txt", "r")
 
-# 48 rotation matrices including mirrorong
+# 48 rotation matrices including mirroring (hence 24x2)
 R3D = [[[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, -1]], [[1, 0, 0], [0, -1, 0], [0, 0, 1]],
        [[1, 0, 0], [0, -1, 0], [0, 0, -1]], [[1, 0, 0], [0, 0, 1], [0, 1, 0]], [[1, 0, 0], [0, 0, 1], [0, -1, 0]],
        [[1, 0, 0], [0, 0, -1], [0, 1, 0]], [[1, 0, 0], [0, 0, -1], [0, -1, 0]], [[-1, 0, 0], [0, 1, 0], [0, 0, 1]],
