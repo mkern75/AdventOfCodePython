@@ -1,5 +1,3 @@
-from collections import Counter
-
 file = open("./year2021/data/day21.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 
