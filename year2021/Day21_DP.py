@@ -1,4 +1,4 @@
-from functools import cache
+import functools
 
 file = open("./year2021/data/day21.txt", "r")
 lines = [line.rstrip('\n') for line in file]
@@ -17,7 +17,7 @@ def play1(player1, score1, player2, score2, die_rolls):
         return play1(player2, score2, player1, score1, die_rolls)
 
 
-@cache  # Dynamic Programming with a single line of code!
+@functools.lru_cache(maxsize=None)  # Dynamic Programming with a single line of code!
 def play2(player1, score1, player2, score2):
     if score1 >= 21:
         return 1, 0
