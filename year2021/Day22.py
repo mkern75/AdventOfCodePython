@@ -82,7 +82,7 @@ def combine_add(list_of_cuboids, cuboid_to_add):
     return list_of_cuboids + to_add
 
 
-# takes a list of non-overlapping cuboids and removes and cuboid
+# takes a list of non-overlapping cuboids and removes a cuboid
 # result is again a list of non-overlapping cuboids
 def combine_remove(list_of_cuboids, cuboid_to_remove):
     result = []
