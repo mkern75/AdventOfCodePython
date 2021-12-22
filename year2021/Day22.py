@@ -1,3 +1,5 @@
+from datetime import datetime
+
 file = open("./year2021/data/day22.txt", "r")
 lines = [line.rstrip('\n') for line in file]
 
@@ -91,6 +93,8 @@ def combine_remove(list_of_cuboids, cuboid_to_remove):
     return result
 
 
+print("start:", datetime.now())
+
 on_cuboids = []  # list of non-overlapping cuboids
 for line in lines:
     cmd, cuboid = parse_step(line)
@@ -109,3 +113,5 @@ for line in lines:
     else:
         on_cuboids = combine_remove(on_cuboids, cuboid)
 print("part 2:", sum([count(c) for c in on_cuboids]))
+
+print("finish:", datetime.now())
