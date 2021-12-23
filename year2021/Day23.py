@@ -1,102 +1,103 @@
 import functools
-from copy import deepcopy
 from math import inf
 from datetime import datetime
 
+AMPHIPOD_TYPES = ["A", "B", "C", "D"]
+AMPHIPOD_ENERGY = {"A": 1, "B": 10, "C": 100, "D": 1000}
 
-def build_rooms():
-    rooms = []
+
+def build_state(setup):
+    tmp_list = []
+    for i in range(11):
+        tmp_list += ["."]
     for i in range(4):
-        for j in range(M):
-            rooms += [(1 + j, 2 + 2 * i)]
-    return rooms
-
-
-def amphipod_type(idx):
-    return idx // M
+        tmp_list += setup[i]
+    return tuple(tmp_list)
 
 
 def is_goal(state):
-    for i in range(N):
-        amph_loc = state[i]
-        amph_type = amphipod_type(i)
-        if amph_loc not in ROOMS[amph_type * M:(amph_type + 1) * M]:
+    return state == GOAL_STATE
+
+
+def coord(i):
+    if i < 11:
+        return 0, i
+    return 1 + (i - 11) % M, 2 + (i - 11) // M * 2
+
+
+def index(r, c):
+    if r == 0:
+        return c
+    return 10 + (c - 2) // 2 * M + r
+
+
+def get_target(i, state):
+    c = 2 + 2 * AMPHIPOD_TYPES.index(state[i])
+    for r in range(M, 0, -1):
+        if state[index(r, c)] == ".":
+            return index(r, c)
+        elif state[index(r, c)] != state[i]:
+            return None
+    return None
+
+
+def is_final(i, state):  # whether amphipod at index i is already in its final place
+    r, c = coord(i)
+    if c != 2 + 2 * AMPHIPOD_TYPES.index(state[i]):
+        return False
+    for rr in range(r + 1, M + 1):
+        if state[i] != state[index(rr, c)]:
             return False
     return True
 
 
-def dist(loc_a, loc_b):
-    ra, ca = loc_a
-    rb, cb = loc_b
-    if ca == cb:
-        return abs(ra - rb)
-    else:
-        return abs(ra) + abs(ca - cb) + abs(rb)
-
-
-def path_is_free(start, target, state):
-    rs, cs = start
-    rt, ct = target
-    if start in ROOMS and target in HALLWAY:
-        for r in range(rs - 1, 0, -1):
-            if (r, cs) in state:
+def path_is_free(i, j, state):  # one always in the hallway (row 0), the other in the room section (row 1+)
+    ri, ci = coord(i)
+    rj, cj = coord(j)
+    for c in range(min(ci, cj), max(ci, cj) + 1):
+        if (0, c) != (ri, ci):
+            if state[index(0, c)] != ".":
                 return False
-        for c in range(min(cs, ct), max(cs, ct) + 1):
-            if (0, c) in state:
-                return False
-    elif start in HALLWAY and target in ROOMS:
-        for c in range(min(cs, ct), max(cs, ct) + 1):
-            if c != cs and (0, c) in state:
-                return False
-        for r in range(1, rt + 1):
-            if (r, ct) in state:
+    c = ci if ri > 0 else cj
+    for r in range(1, max(ri, rj) + 1):
+        if (r, c) != (ri, ci):
+            if state[index(r, c)] != ".":
                 return False
     return True
 
 
-def get_target_room(amph_type, state):
-    for i in range(M - 1, -1, -1):
-        target_room = ROOMS[amph_type * M + i]
-        if target_room not in state:  # room is free
-            return target_room
-        else:
-            j = state.index(target_room)  # somebody else is still in the rooms - can't move in just yet
-            if amphipod_type(j) != amph_type:
-                return None
-    return None
+def get_new_state(i, j, state):
+    tmp_list = list(state)
+    tmp = tmp_list[i]
+    tmp_list[i] = tmp_list[j]
+    tmp_list[j] = tmp
+    return tuple(tmp_list)
 
 
-def get_new_state(i, state, new_loc):
-    new_n_moves = deepcopy(state[-1])
-    tmp = list(new_n_moves)
-    tmp[i] = tmp[i] + 1
-    new_n_moves = tuple(tmp)
-    new_state = deepcopy(state)
-    tmp = list(new_state)
-    tmp[i] = new_loc
-    tmp[-1] = new_n_moves
-    return tuple(tmp)
+def dist(i, j):  # one always in the hallway (row 0), the other in the room section (row 1+)
+    ri, ci = coord(i)
+    rj, cj = coord(j)
+    return abs(ri - rj) + abs(ci - cj)
 
 
 def get_neighbours(state):
     neighbours = []
-    for i in range(N):
-        amph_loc = state[i]
-        amph_n_moves = state[-1][i]
-        amph_type = amphipod_type(i)
-        if amph_loc in ROOMS and amph_n_moves == 0:
-            for hallway_loc in HALLWAY:  # first move is always from room to hallway
-                if path_is_free(amph_loc, hallway_loc, state):
-                    neighbour_state = get_new_state(i, state, hallway_loc)
-                    energy = dist(amph_loc, hallway_loc) * 10 ** amph_type
+    for i in range(11):
+        if state[i] in AMPHIPOD_TYPES:
+            target = get_target(i, state)
+            if target is not None:
+                if path_is_free(i, target, state):
+                    neighbour_state = get_new_state(i, target, state)
+                    energy = dist(i, target) * AMPHIPOD_ENERGY[state[i]]
                     neighbours += [(neighbour_state, energy)]
-        elif amph_loc in HALLWAY and amph_n_moves == 1:
-            target_loc = get_target_room(amphipod_type(i), state)  # second move is always from hallway to target rooms
-            if target_loc is not None:
-                if path_is_free(amph_loc, target_loc, state):
-                    neighbour_state = get_new_state(i, state, target_loc)
-                    energy = dist(amph_loc, target_loc) * 10 ** amph_type
-                    neighbours += [(neighbour_state, energy)]
+    for i in range(11, 11 + N):
+        if state[i] in AMPHIPOD_TYPES and not is_final(i, state):
+            for j in range(11):
+                if state[j] == "." and j not in [2, 4, 6, 8]:
+                    if path_is_free(i, j, state):
+                        neighbour_state = get_new_state(i, j, state)
+                        energy = dist(i, j) * AMPHIPOD_ENERGY[state[i]]
+                        neighbours += [(neighbour_state, energy)]
     return neighbours
 
 
@@ -112,28 +113,25 @@ def organise(state):
 
 
 print("start :", datetime.now().strftime("%H:%M:%S.%f"))
-HALLWAY = [(0, 0), (0, 1), (0, 3), (0, 5), (0, 7), (0, 9), (0, 10)]  # hallway ( does not change between parts)
 
-N = 8  # number of amphipods
-M = N // 4  # number of amphipods per type
-ROOMS = build_rooms()  # rooms (does not include the hallway)
-start = ((1, 2), (2, 6),  # locations of A amphipods
-         (1, 6), (1, 8),  # locations of B amphipods
-         (1, 4), (2, 8),  # locations of C amphipods
-         (2, 2), (2, 4),  # locations of D amphipods
-         (0, 0, 0, 0, 0, 0, 0, 0))  # last element: number of moves per amphipod
-ans1 = organise(start)
+start_setup = [["A", "D"], ["C", "D"], ["B", "A"], ["B", "C"]]  # 18,170
+goal_setup = [["A", "A"], ["B", "B"], ["C", "C"], ["D", "D"]]
+START_STATE = build_state(start_setup)
+GOAL_STATE = build_state(goal_setup)
+M = len(start_setup[0])
+N = len(start_setup[0]) * 4
+
+ans1 = organise(START_STATE)
 print("part 1:", ans1)
 
-N = 16  # number of amphipods
-M = N // 4  # number of amphipods per type
-ROOMS = build_rooms()  # rooms (does not include the hallway)
-start = ((1, 2), (3, 6), (4, 6), (2, 8),  # locations of A amphipods
-         (3, 4), (1, 6), (2, 6), (1, 8),  # locations of B amphipods
-         (1, 4), (2, 4), (3, 8), (4, 8),  # locations of C amphipods
-         (2, 2), (3, 2), (4, 2), (4, 4),  # locations of D amphipods
-         (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))  # last element: number of moves per amphipod
-ans2 = organise(start)
+start_setup = [["A", "D", "D", "D"], ["C", "C", "B", "D"], ["B", "B", "A", "A"], ["B", "A", "C", "C"]]  # 50,208
+goal_setup = [["A", "A", "A", "A"], ["B", "B", "B", "B"], ["C", "C", "C", "C"], ["D", "D", "D", "D"]]
+START_STATE = build_state(start_setup)
+GOAL_STATE = build_state(goal_setup)
+M = len(start_setup[0])
+N = len(start_setup[0]) * 4
+
+ans2 = organise(START_STATE)
 print("part 2:", ans2)
 
 print("finish:", datetime.now().strftime("%H:%M:%S.%f"))
