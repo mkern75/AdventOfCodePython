@@ -91,7 +91,7 @@ def get_neighbours(state):
                     energy = dist(amph_loc, hallway_loc) * 10 ** amph_type
                     neighbours += [(neighbour_state, energy)]
         elif amph_loc in HALLWAY and amph_n_moves == 1:
-            target_loc = get_target_room(amphipod_type(i), state)  # first mmove is always from hallway to target rooms
+            target_loc = get_target_room(amphipod_type(i), state)  # second move is always from hallway to target rooms
             if target_loc is not None:
                 if path_is_free(amph_loc, target_loc, state):
                     neighbour_state = get_new_state(i, state, target_loc)
