@@ -1,23 +1,19 @@
+from math import inf
 from datetime import datetime
 
-file = open("./year2021/data/day22.txt", "r")
-lines = [line.rstrip('\n') for line in file]
+INPUT_FILE = "./year2021/data/day22.txt"
 
 
-def parse_step(line):
-    cmd, tmp = line.split(" ")
-    x, y, z = tmp.split(",")
-    x1, x2 = list(map(int, x[2:].split("..")))
-    y1, y2 = list(map(int, y[2:].split("..")))
-    z1, z2 = list(map(int, z[2:].split("..")))
-    return cmd, (x1, x2, y1, y2, z1, z2)
-
-
-def included_in_part_1(cuboid):
-    for i in range(6):
-        if cuboid[i] < -50 or 50 < cuboid[i]:
-            return False
-    return True
+def parse_input(lines):
+    instructions = []
+    for line in lines:
+        cmd, tmp = line.split(" ")
+        x, y, z = tmp.split(",")
+        x0, x1 = list(map(int, x[2:].split("..")))
+        y0, y1 = list(map(int, y[2:].split("..")))
+        z0, z1 = list(map(int, z[2:].split("..")))
+        instructions += [(cmd, (x0, x1, y0, y1, z0, z1))]
+    return instructions
 
 
 def count(cuboid):
@@ -73,15 +69,10 @@ def minus(c1, c2):
 # takes a list of non-overlapping cuboids and adds another cuboid
 # result is again a list of non-overlapping cuboids
 def combine_add(list_of_cuboids, cuboid_to_add):
-    if not list_of_cuboids:
-        return [cuboid_to_add]
-    to_add = [cuboid_to_add]
+    result = []
     for c in list_of_cuboids:
-        new_to_add = []
-        for x in to_add:
-            new_to_add += minus(x, c)
-        to_add = new_to_add
-    return list_of_cuboids + to_add
+        result += minus(c, cuboid_to_add)
+    return result + [cuboid_to_add]
 
 
 # takes a list of non-overlapping cuboids and removes a cuboid
@@ -93,25 +84,32 @@ def combine_remove(list_of_cuboids, cuboid_to_remove):
     return result
 
 
-print("start:", datetime.now())
+# adjusts a cuboid c to its overlap with limited area (-lt, +lt, -lt, +lt, -lt, +lt)
+def adjust(c, lt):
+    if max([abs(c[i]) for i in range(6)]) > lt:
+        return None
+    return max(c[0], -lt), min(c[1], +lt), max(c[2], -lt), min(c[3], +lt), max(c[4], -lt), min(c[5], +lt)
 
-on_cuboids = []  # list of non-overlapping cuboids
-for line in lines:
-    cmd, cuboid = parse_step(line)
-    if included_in_part_1(cuboid):
-        if cmd == "on":
-            on_cuboids = combine_add(on_cuboids, cuboid)
-        else:
-            on_cuboids = combine_remove(on_cuboids, cuboid)
-print("part 1:", sum([count(c) for c in on_cuboids]))
 
-on_cuboids = []  # list of non-overlapping cuboids
-for line in lines:
-    cmd, cuboid = parse_step(line)
-    if cmd == "on":
-        on_cuboids = combine_add(on_cuboids, cuboid)
-    else:
-        on_cuboids = combine_remove(on_cuboids, cuboid)
-print("part 2:", sum([count(c) for c in on_cuboids]))
+def solve(instructions, limit=inf):
+    C = []  # list of non-overlapping cuboids
+    for instr in instructions:
+        cmd, cuboid = instr
+        cuboid = adjust(cuboid, limit)
+        if cuboid is not None:
+            if cmd == "on":
+                C = combine_add(C, cuboid)
+            else:
+                C = combine_remove(C, cuboid)
+    return sum([count(c) for c in C])
 
-print("finish:", datetime.now())
+
+print("start :", datetime.now().strftime("%H:%M:%S.%f"))
+
+file = open(INPUT_FILE, "r")
+lines = [line.rstrip('\n') for line in file]
+instructions = parse_input(lines)
+print("part 1:", solve(instructions, 50))
+print("part 2:", solve(instructions))
+
+print("finish:", datetime.now().strftime("%H:%M:%S.%f"))

@@ -1,4 +1,5 @@
 import numpy as np
+from math import inf
 from datetime import datetime
 
 INPUT_FILE = "./year2021/data/day22.txt"
@@ -16,15 +17,6 @@ def parse_input(lines):
     return instructions
 
 
-def filter_instructions_part_1(instructions):
-    filtered_instructions = []
-    for instr in instructions:
-        _, (x0, x1, y0, y1, z0, z1) = instr
-        if max([abs(x0), abs(x1), abs(y0), abs(y1), abs(z0), abs(z1)]) <= 50:
-            filtered_instructions += [instr]
-    return filtered_instructions
-
-
 def index(x, X):
     i = 0
     while i + 1 < len(X) and x >= X[i + 1]:
@@ -32,8 +24,8 @@ def index(x, X):
     return i
 
 
-def compress_coord(x0, x1, y0, y1, z0, z1, X, Y, Z):
-    return index(x0, X), index(x1, X), index(y0, Y), index(y1, Y), index(z0, Z), index(z1, Z),
+def compress_coord(c, X, Y, Z):
+    return index(c[0], X), index(c[1], X), index(c[2], Y), index(c[3], Y), index(c[4], Z), index(c[5], Z)
 
 
 def count_cubes(C, X, Y, Z):
@@ -45,15 +37,24 @@ def count_cubes(C, X, Y, Z):
     return cnt
 
 
+# adjusts a cuboid c to its overlap with limited area (-lt, +lt, -lt, +lt, -lt, +lt)
+def adjust(c, lt):
+    if max([abs(c[i]) for i in range(6)]) > lt:
+        return None
+    return max(c[0], -lt), min(c[1], +lt), max(c[2], -lt), min(c[3], +lt), max(c[4], -lt), min(c[5], +lt)
+
+
 # main idea: coordinate compression (though my other idea of maintaining list of non-overlapping cuboids is faster)
-def solve(instructions):
+def solve(instructions, limit=inf):
     X, Y, Z = set(), set(), set()
 
     for instr in instructions:
-        _, (x0, x1, y0, y1, z0, z1) = instr
-        X.update([x0, x1 + 1])
-        Y.update([y0, y1 + 1])
-        Z.update([z0, z1 + 1])
+        _, cuboid = instr
+        cuboid = adjust(cuboid, limit)
+        if cuboid is not None:
+            X.update([cuboid[0], cuboid[1] + 1])
+            Y.update([cuboid[2], cuboid[3] + 1])
+            Z.update([cuboid[4], cuboid[5] + 1])
 
     X = sorted(list(X))
     Y = sorted(list(Y))
@@ -63,22 +64,24 @@ def solve(instructions):
     C = np.zeros((N, N, N), dtype=bool)
 
     for instr in instructions:
-        cmd, (x0, x1, y0, y1, z0, z1) = instr
-        x0, x1, y0, y1, z0, z1 = compress_coord(x0, x1, y0, y1, z0, z1, X, Y, Z)
-        if cmd == "on":
-            C[x0:x1 + 1, y0:y1 + 1, z0:z1 + 1] = True
-        elif cmd == "off":
-            C[x0:x1 + 1, y0:y1 + 1, z0:z1 + 1] = False
+        cmd, cuboid = instr
+        cuboid = adjust(cuboid, limit)
+        if cuboid is not None:
+            cuboid = compress_coord(cuboid, X, Y, Z)
+            if cmd == "on":
+                C[cuboid[0]:cuboid[1] + 1, cuboid[2]:cuboid[3] + 1, cuboid[4]:cuboid[5] + 1] = True
+            elif cmd == "off":
+                C[cuboid[0]:cuboid[1] + 1, cuboid[2]:cuboid[3] + 1, cuboid[4]:cuboid[5] + 1] = False
 
     return count_cubes(C, X, Y, Z)
 
 
-print("start:", datetime.now())
+print("start :", datetime.now().strftime("%H:%M:%S.%f"))
 
 file = open(INPUT_FILE, "r")
 lines = [line.rstrip('\n') for line in file]
 instructions = parse_input(lines)
-print("part 1:", solve(filter_instructions_part_1(instructions)))
+print("part 1:", solve(instructions, 50))
 print("part 2:", solve(instructions))
 
-print("finish:", datetime.now())
+print("finish:", datetime.now().strftime("%H:%M:%S.%f"))
