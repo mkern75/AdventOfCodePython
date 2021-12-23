@@ -15,10 +15,6 @@ def build_state(setup):
     return tuple(tmp_list)
 
 
-def is_goal(state):
-    return state == GOAL_STATE
-
-
 def coord(i):
     if i < 11:
         return 0, i
@@ -103,7 +99,7 @@ def get_neighbours(state):
 
 @functools.lru_cache(maxsize=None)  # DP!
 def organise(state):
-    if is_goal(state):
+    if state == GOAL_STATE:
         return 0
     else:
         best = inf
