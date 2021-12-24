@@ -14,12 +14,6 @@ for i in range(14):
     C += [int(program[i * 18 + 15].split()[2])]
 
 
-def execute_one_block(single_input, z_in, a, b, c):
-    if z_in % 26 == single_input - b:
-        return z_in // a
-    return (z_in // a) * 26 + single_input + c
-
-
 def reverse_one_block(z_out, a, b, c):
     result = []
     for single_input in range(1, 10):
@@ -36,19 +30,12 @@ def reverse_one_block(z_out, a, b, c):
     return result
 
 
-def list_to_number(alist):
-    n = 0
-    for d in alist:
-        n = n * 10 + d
-    return n
-
-
 def search_model_numbers(z_out, inputs):
     n = len(inputs)
 
     if n == 14:
         if z_out == 0:
-            num = list_to_number(inputs)
+            num = int("".join([str(n) for n in inputs]))
             global MIN_MODEL_NUMBER, MAX_MODEL_NUMBER
             MIN_MODEL_NUMBER = min(MIN_MODEL_NUMBER, num)
             MAX_MODEL_NUMBER = max(MAX_MODEL_NUMBER, num)
