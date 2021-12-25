@@ -1,4 +1,3 @@
-import numpy as np
 from datetime import datetime
 
 file = open("./year2021/data/day25.txt", "r")
@@ -7,7 +6,7 @@ lines = [line.rstrip('\n') for line in file]
 
 def one_step(g):
     R, C, move = len(lines), len(lines[0]), False
-    ng = np.zeros((R, C), dtype=int)
+    ng = [[0] * C for _ in range(R)]
     for r in range(R):
         for c in range(C):
             if g[r][c] == 1:
@@ -30,7 +29,7 @@ def one_step(g):
 print("start :", datetime.now().strftime("%H:%M:%S.%f"))
 
 m = {".": 0, ">": 1, "v": 2}
-G = np.array([[m[c] for c in line] for line in lines])
+G = [[m[c] for c in line] for line in lines]
 
 step, move = 0, True
 while move:
