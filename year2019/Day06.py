@@ -6,16 +6,12 @@ def n_direc_orbits(orbit):
     return len(orbit)
 
 
-def length_orbit_seq(x, orbit):
-    return 0 if x not in orbit else 1 + length_orbit_seq(orbit[x], orbit)
+def seq_to_com(x, orbit):
+    return ["COM"] if x not in orbit else [x] + seq_to_com(orbit[x], orbit)
 
 
 def n_indirect_orbits(orbit):
-    return sum([length_orbit_seq(orbit[x], orbit) for x in orbit])
-
-
-def seq_to_com(x, orbit):
-    return ["COM"] if x not in orbit else [x] + seq_to_com(orbit[x], orbit)
+    return sum([len(seq_to_com(orbit[x], orbit)) - 1 for x in orbit])
 
 
 orbit = {}
