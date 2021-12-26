@@ -10,15 +10,14 @@ def run(program):
         mem[i] = program[i]
     ip = 0
     while ip in mem:
-        match mem[ip]:
-            case 1:
-                mem[mem[ip + 3]] = mem[mem[ip + 1]] + mem[mem[ip + 2]]
-                ip += 4
-            case 2:
-                mem[mem[ip + 3]] = mem[mem[ip + 1]] * mem[mem[ip + 2]]
-                ip += 4
-            case 99:
-                break
+        if mem[ip] == 1:
+            mem[mem[ip + 3]] = mem[mem[ip + 1]] + mem[mem[ip + 2]]
+            ip += 4
+        elif mem[ip] == 2:
+            mem[mem[ip + 3]] = mem[mem[ip + 1]] * mem[mem[ip + 2]]
+            ip += 4
+        elif mem[ip] == 99:
+            break
     return mem
 
 
