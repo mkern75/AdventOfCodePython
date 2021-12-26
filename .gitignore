@@ -140,3 +140,4 @@ data/load_data.sh
 data/
 .idea/
 load_data.sh
+year2016/Day10.py
