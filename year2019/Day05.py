@@ -67,8 +67,8 @@ def run(program, inp):
 
 
 program = list(map(int, lines[0].split(",")))
-mem, outp = run(program, [1])
+_, outp = run(program, [1])
 print("part 1:", outp[-1])
 
-mem, outp = run(program, [5])
+_, outp = run(program, [5])
 print("part 2:", outp[-1])
