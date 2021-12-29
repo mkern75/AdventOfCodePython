@@ -3,11 +3,13 @@ class MonorailComputer:
         self.program = [instr.split() for instr in program]
         self.memory = {"a": 0, "b": 0, "c": 0, "d": 0}
         self.ipp = 0  # instruction pointer
+        self.output = []
 
     def reset(self, program):
         self.program = [instr.split() for instr in program]
         self.memory = {"a": 0, "b": 0, "c": 0, "d": 0}
         self.ipp = 0  # instruction pointer
+        self.output = []
 
     def val(self, s):
         if s in ["a", "b", "c", "d"]:
@@ -48,4 +50,7 @@ class MonorailComputer:
                         self.program[addr][0] = "cpy"
                     else:
                         self.program[addr][0] = "jnz"
+            self.ipp += 1
+        elif instr[0] == "out":
+            self.output += [self.val(instr[1])]
             self.ipp += 1
