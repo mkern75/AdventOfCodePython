@@ -12,9 +12,10 @@ for i in range(len(digits)):
     if digits[i] == digits[(i + 1) % len(digits)]:
         ans1 += digits[i]
 print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
+t1 = time.time()
 
 ans2 = 0
 for i in range(len(digits)):
     if digits[i] == digits[(i + len(digits) // 2) % len(digits)]:
         ans2 += digits[i]
-print("part 2:", ans2, f"  ({time.time() - t0:.3f}s)")
+print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")

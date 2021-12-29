@@ -11,6 +11,7 @@ ans1 = 0
 for row in grid:
     ans1 += max(row) - min(row)
 print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
+t1 = time.time()
 
 ans2 = 0
 for row in grid:
@@ -19,4 +20,4 @@ for row in grid:
             if a != b and a % b == 0:
                 ans2 += a // b
     ans1 += max(row) - min(row)
-print("part 2:", ans2, f"  ({time.time() - t0:.3f}s)")
+print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")

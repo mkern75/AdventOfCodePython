@@ -52,6 +52,7 @@ target = int(lines[0])
 
 ans1 = n_steps_part1(target)
 print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
+t1 = time.time()
 
 ans2 = number_on_spirale_above_target_part2(target)
-print("part 2:", ans2, f"  ({time.time() - t0:.3f}s)")
+print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
