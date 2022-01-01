@@ -37,7 +37,7 @@ for i in range(16):
     xor = 0
     for j in range(16):
         xor = xor ^ L[i * 16 + j]
-    knot_hash += hex(xor)[2:]
+    knot_hash += hex(xor)[2:].zfill(2)
 
 ans2 = knot_hash
 print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
