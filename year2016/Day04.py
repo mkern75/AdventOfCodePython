@@ -6,7 +6,7 @@ lines = [line.rstrip('\n') for line in file]
 
 
 def check(line):
-    m = re.compile("([a-z\-]*)-([0-9]+)\[([a-z]*)\]").match(line)
+    m = re.compile(r"([a-z\-]*)-([0-9]+)\[([a-z]*)\]").match(line)
     encrypted_name = m.group(1)
     sector_id = int(m.group(2))
     checksum = m.group(3)
