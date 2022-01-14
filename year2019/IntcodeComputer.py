@@ -18,6 +18,7 @@ class IntcodeComputer:
         self._ip = 0  # instruction pointer
         self._rb = 0  # relative base
         self._finished = False
+        self._awaiting_input = False
 
     def reset(self, program):
         self._memory = defaultdict(int)
@@ -57,6 +58,7 @@ class IntcodeComputer:
 
     def add_input(self, inp):
         self._input += [inp]
+        self._awaiting_input = False
 
     def __pop_input(self):
         return self._input.pop(0)
@@ -75,69 +77,76 @@ class IntcodeComputer:
             self.pop_output()
         return self.pop_output()
 
-    def has_output(self):
-        return len(self._output) > 0
+    def has_output(self, n=1):
+        return len(self._output) >= n
 
     def is_finished(self):
         return self._finished
 
+    def is_awating_input(self):
+        return self._awaiting_input
+
     def run(self):
-        while self._ip in self._memory:
-            opcode, pmode = self._memory[self._ip] % 100, self._memory[self._ip] // 100
-            if opcode == 1:  # add
-                v1 = self.__read(mode(pmode, 1), self._ip + 1)
-                v2 = self.__read(mode(pmode, 2), self._ip + 2)
-                self.__write(mode(pmode, 3), self._ip + 3, v1 + v2)
-                self._ip += 4
-            elif opcode == 2:  # multiply
-                v1 = self.__read(mode(pmode, 1), self._ip + 1)
-                v2 = self.__read(mode(pmode, 2), self._ip + 2)
-                self.__write(mode(pmode, 3), self._ip + 3, v1 * v2)
-                self._ip += 4
-            elif opcode == 3:  # input
-                if not self.has_input():
-                    break
-                self.__write(mode(pmode, 1), self._ip + 1, self.__pop_input())
-                self._ip += 2
-            elif opcode == 4:  # output
-                self.__add_output(self.__read(mode(pmode, 1), self._ip + 1))
-                self._ip += 2
-            elif opcode == 5:  # jump-if-true
-                v1 = self.__read(mode(pmode, 1), self._ip + 1)
-                v2 = self.__read(mode(pmode, 2), self._ip + 2)
-                if v1 != 0:
-                    self._ip = v2
-                else:
-                    self._ip += 3
-            elif opcode == 6:  # jump-if-false
-                v1 = self.__read(mode(pmode, 1), self._ip + 1)
-                v2 = self.__read(mode(pmode, 2), self._ip + 2)
-                if v1 == 0:
-                    self._ip = v2
-                else:
-                    self._ip += 3
-            elif opcode == 7:  # less than
-                v1 = self.__read(mode(pmode, 1), self._ip + 1)
-                v2 = self.__read(mode(pmode, 2), self._ip + 2)
-                if v1 < v2:
-                    self.__write(mode(pmode, 3), self._ip + 3, 1)
-                else:
-                    self.__write(mode(pmode, 3), self._ip + 3, 0)
-                self._ip += 4
-            elif opcode == 8:  # equals
-                v1 = self.__read(mode(pmode, 1), self._ip + 1)
-                v2 = self.__read(mode(pmode, 2), self._ip + 2)
-                if v1 == v2:
-                    self.__write(mode(pmode, 3), self._ip + 3, 1)
-                else:
-                    self.__write(mode(pmode, 3), self._ip + 3, 0)
-                self._ip += 4
-            elif opcode == 9:  # relative base offset
-                v1 = self.__read(mode(pmode, 1), self._ip + 1)
-                self._rb += v1
-                self._ip += 2
-            elif opcode == 99:
-                self._finished = True
-                break
+        while self._ip in self._memory and not self.is_finished() and not self.is_awating_input():
+            self.run_one_cycle()
+
+    def run_one_cycle(self):
+        opcode, pmode = self._memory[self._ip] % 100, self._memory[self._ip] // 100
+        if opcode == 1:  # add
+            v1 = self.__read(mode(pmode, 1), self._ip + 1)
+            v2 = self.__read(mode(pmode, 2), self._ip + 2)
+            self.__write(mode(pmode, 3), self._ip + 3, v1 + v2)
+            self._ip += 4
+        elif opcode == 2:  # multiply
+            v1 = self.__read(mode(pmode, 1), self._ip + 1)
+            v2 = self.__read(mode(pmode, 2), self._ip + 2)
+            self.__write(mode(pmode, 3), self._ip + 3, v1 * v2)
+            self._ip += 4
+        elif opcode == 3:  # input
+            if not self.has_input():
+                self._awaiting_input = True
+                return
+            self.__write(mode(pmode, 1), self._ip + 1, self.__pop_input())
+            self._ip += 2
+        elif opcode == 4:  # output
+            self.__add_output(self.__read(mode(pmode, 1), self._ip + 1))
+            self._ip += 2
+        elif opcode == 5:  # jump-if-true
+            v1 = self.__read(mode(pmode, 1), self._ip + 1)
+            v2 = self.__read(mode(pmode, 2), self._ip + 2)
+            if v1 != 0:
+                self._ip = v2
             else:
-                assert False, "wrong opcode"
+                self._ip += 3
+        elif opcode == 6:  # jump-if-false
+            v1 = self.__read(mode(pmode, 1), self._ip + 1)
+            v2 = self.__read(mode(pmode, 2), self._ip + 2)
+            if v1 == 0:
+                self._ip = v2
+            else:
+                self._ip += 3
+        elif opcode == 7:  # less than
+            v1 = self.__read(mode(pmode, 1), self._ip + 1)
+            v2 = self.__read(mode(pmode, 2), self._ip + 2)
+            if v1 < v2:
+                self.__write(mode(pmode, 3), self._ip + 3, 1)
+            else:
+                self.__write(mode(pmode, 3), self._ip + 3, 0)
+            self._ip += 4
+        elif opcode == 8:  # equals
+            v1 = self.__read(mode(pmode, 1), self._ip + 1)
+            v2 = self.__read(mode(pmode, 2), self._ip + 2)
+            if v1 == v2:
+                self.__write(mode(pmode, 3), self._ip + 3, 1)
+            else:
+                self.__write(mode(pmode, 3), self._ip + 3, 0)
+            self._ip += 4
+        elif opcode == 9:  # relative base offset
+            v1 = self.__read(mode(pmode, 1), self._ip + 1)
+            self._rb += v1
+            self._ip += 2
+        elif opcode == 99:
+            self._finished = True
+            return
+        else:
+            assert False, "wrong opcode"
