@@ -1,4 +1,4 @@
-from utils import load_lines, tic, toc
+from utils import load_lines, tic, toc, sgn
 import re
 from itertools import combinations
 from math import lcm
@@ -12,10 +12,6 @@ def load_moons(filename):
         mp = re.compile(r"<x=(-?\d+), y=(-?\d+), z=(-?\d+)>").match(line)
         moons += [Moon(int(mp.group(1)), int(mp.group(2)), int(mp.group(3)))]
     return moons
-
-
-def sgn(n):
-    return 1 if n > 0 else (-1 if n < 0 else 0)
 
 
 class Moon:
