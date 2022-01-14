@@ -56,3 +56,7 @@ def load_grid(filename, separator=None):
 
 def load_int_program(filename):
     return load_numbers(filename, ",")
+
+
+def sgn(n):
+    return 1 if n > 0 else (-1 if n < 0 else 0)
