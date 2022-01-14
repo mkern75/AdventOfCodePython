@@ -1,15 +1,9 @@
-from datetime import datetime
+from utils import load_grid, tic, toc
 import math
 
 # grid representation is as (row,col) here but results require (x,y)
 
 INPUT_FILE = "./year2019/data/day10.txt"
-
-
-def load_grid(filename):
-    file = open(filename, "r")
-    lines = [line.rstrip('\n') for line in file]
-    return [[c for c in line] for line in lines]
 
 
 def asteroid(r, c, grid):
@@ -81,14 +75,11 @@ def vaporise(r, c, grid, winner):
     return None
 
 
-print("start :", datetime.now().strftime("%H:%M:%S.%f"))
-
+tic()
 grid = load_grid(INPUT_FILE)
-
 n_best, r_best, c_best = most_visible(grid)
-print("part 1:", n_best)
+print(f"part 1: {n_best}   ({toc():.3f}s)")
 
+tic()
 r_vapor, c_vapor = vaporise(r_best, c_best, grid, 200)
-print("part 2:", (c_vapor * 100 + r_vapor))
-
-print("finish:", datetime.now().strftime("%H:%M:%S.%f"))
+print(f"part 1: {(c_vapor * 100 + r_vapor)}   ({toc():.3f}s)")

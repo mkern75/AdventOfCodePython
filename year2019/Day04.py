@@ -1,7 +1,6 @@
-from datetime import datetime
+from utils import load_numbers, tic, toc
 
-file = open("./year2019/data/day04.txt", "r")
-lines = [line.rstrip('\n') for line in file]
+INPUT_FILE = "./year2019/data/day04.txt"
 
 
 def digits(n):
@@ -25,16 +24,17 @@ def valid_password(n, exactly_two=False):
     return len(d) == 6 and same_digits and no_decrease
 
 
-print("start :", datetime.now().strftime("%H:%M:%S.%f"))
-
-low, high = map(int, lines[0].split("-"))
-ans1, ans2 = 0, 0
+tic()
+low, high = load_numbers(INPUT_FILE, "-")
+ans1 = 0
 for n in range(low, high + 1):
     if valid_password(n):
         ans1 += 1
+print(f"part 1: {ans1}   ({toc():.3f}s)")
+
+tic()
+ans2 = 0
+for n in range(low, high + 1):
     if valid_password(n, True):
         ans2 += 1
-print("part 1:", ans1)
-print("part 2:", ans2)
-
-print("finish:", datetime.now().strftime("%H:%M:%S.%f"))
+print(f"part 2: {ans2}   ({toc():.3f}s)")

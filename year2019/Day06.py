@@ -1,5 +1,6 @@
-file = open("./year2019/data/day06.txt", "r")
-lines = [line.rstrip('\n') for line in file]
+from utils import load_lines
+
+INPUT_FILE = "./year2019/data/day06.txt"
 
 
 def n_direc_orbits(orbit):
@@ -15,7 +16,7 @@ def n_indirect_orbits(orbit):
 
 
 orbit = {}
-for line in lines:
+for line in load_lines(INPUT_FILE):
     aaa, bbb = line.split(")")
     orbit[bbb] = aaa
 

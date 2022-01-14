@@ -1,12 +1,13 @@
-file = open("./year2019/data/day08.txt", "r")
-lines = [line.rstrip('\n') for line in file]
+from utils import load_line
+from colorama import Back, Style
 
-C = 25
-R = 6
-L = len(lines[0]) // (R * C)
+INPUT_FILE = "./year2019/data/day08.txt"
+R, C = 6, 25
 
 
-def load_image(inp):
+def load_image(filename):
+    inp = load_line(filename)
+    L = len(inp) // (R * C)
     image = [[[0 for _ in range(C)] for _ in range(R)] for _ in range(L)]
     for i in range(len(inp)):
         image[i // (C * R)][i % (C * R) // C][i % C] = int(inp[i])
@@ -23,16 +24,16 @@ def count_digit(digit, layer):
 
 
 def pixel(row, col, image):
-    for layer in range(L):
+    for layer in range(len(image)):
         if image[layer][row][col] != 2:
             return image[layer][row][col]
     return 2
 
 
-image = load_image(lines[0])
+image = load_image(INPUT_FILE)
 
 layer_min, min0 = -1, R * C + 1
-for layer in range(L):
+for layer in range(len(image)):
     l0 = count_digit(0, image[layer])
     if l0 < min0:
         min0 = l0
@@ -43,7 +44,7 @@ print("part 2:")
 for row in range(R):
     for col in range(C):
         if pixel(row, col, image) == 1:
-            print("X", end="")
+            print(Back.GREEN + "X" + Style.RESET_ALL, end="")
         else:
             print(" ", end="")
     print()

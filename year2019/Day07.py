@@ -1,8 +1,8 @@
+from utils import load_int_program
 from IntcodeComputer import IntcodeComputer
 from itertools import permutations
 
-file = open("./year2019/data/day07.txt", "r")
-lines = [line.rstrip('\n') for line in file]
+INPUT_FILE = "./year2019/data/day07.txt"
 
 
 def run_amplifiers(program, seq, loop=False):
@@ -20,14 +20,12 @@ def run_amplifiers(program, seq, loop=False):
             return output
 
 
-program = list(map(int, lines[0].split(",")))
-
+program = load_int_program(INPUT_FILE)
 ans1 = 0
 for seq in permutations([0, 1, 2, 3, 4]):
     ans1 = max(ans1, run_amplifiers(program, seq))
 print("part 1:", ans1)
 
-program = list(map(int, lines[0].split(",")))
 ans2 = 0
 for seq in permutations([5, 6, 7, 8, 9]):
     ans2 = max(ans2, run_amplifiers(program, seq, True))

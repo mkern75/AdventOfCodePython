@@ -1,8 +1,7 @@
+from utils import load_lines
 import math
 
-file = open("./year2019/data/day03.txt", "r")
-lines = [line.rstrip('\n') for line in file]
-
+INPUT_FILE = "./year2019/data/day03.txt"
 DIRECTION = {"R": (1, 0), "L": (-1, 0), "U": (0, 1), "D": (0, -1)}
 
 
@@ -22,6 +21,7 @@ def manhattan_dist(coord):
     return abs(coord[0]) + abs(coord[1])
 
 
+lines = load_lines(INPUT_FILE)
 wire1 = lines[0].split(",")
 wire2 = lines[1].split(",")
 visited1 = visited(wire1)

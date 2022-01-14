@@ -1,5 +1,8 @@
-file = open("./year2019/data/day01.txt", "r")
-modules = [int(line.rstrip('\n')) for line in file]
+from utils import load_numbers
+
+INPUT_FILE = "./year2019/data/day01.txt"
+
+modules = load_numbers(INPUT_FILE)
 N = len(modules)
 
 ans1 = 0

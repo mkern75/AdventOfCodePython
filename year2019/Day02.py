@@ -1,10 +1,9 @@
+from utils import load_int_program
 from IntcodeComputer import IntcodeComputer
 
-file = open("./year2019/data/day02.txt", "r")
-lines = [line.rstrip('\n') for line in file]
+INPUT_FILE = "./year2019/data/day02.txt"
 
-program = list(map(int, lines[0].split(",")))
-
+program = load_int_program(INPUT_FILE)
 computer = IntcodeComputer(program)
 computer.memory[1] = 12
 computer.memory[2] = 2
