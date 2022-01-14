@@ -63,16 +63,16 @@ moons = load_moons(INPUT_FILE)
 state_orig = [tuple([(moon.x, moon.vx) for moon in moons])]
 state_orig += [tuple([(moon.y, moon.vy) for moon in moons])]
 state_orig += [tuple([(moon.z, moon.vz) for moon in moons])]
-period = [None] * 3
+period = [0, 0, 0]
 step = 0
-while None in period:
+while 0 in period:
     step += 1
     one_step(moons)
     state = [tuple([(moon.x, moon.vx) for moon in moons])]
     state += [tuple([(moon.y, moon.vy) for moon in moons])]
     state += [tuple([(moon.z, moon.vz) for moon in moons])]
     for i in range(3):
-        if period[i] is None and state[i] == state_orig[i]:
+        if period[i] == 0 and state[i] == state_orig[i]:
             period[i] = step
 ans2 = lcm(*period)
 print(f"part 2: {ans2}   ({toc():.3f}s)")
