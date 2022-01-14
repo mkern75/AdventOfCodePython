@@ -5,11 +5,11 @@ INPUT_FILE = "./year2019/data/day09.txt"
 
 program = load_int_program(INPUT_FILE)
 computer = IntcodeComputer(program)
-computer.input += [1]
+computer.add_input(1)
 computer.run()
-print("part 1:", computer.output[-1])
+print("part 1:", computer.pop_output())
 
 computer.reset(program)
-computer.input += [2]
+computer.add_input(2)
 computer.run()
-print("part 2:", computer.output[-1])
+print("part 2:", computer.pop_output())

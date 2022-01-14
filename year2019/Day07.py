@@ -9,14 +9,14 @@ def run_amplifiers(program, seq, loop=False):
     amplifier = []
     for i in range(5):
         amplifier += [IntcodeComputer(program)]
-        amplifier[i].input += [seq[i]]
+        amplifier[i].add_input(seq[i])
     output = 0
     while True:
         for i in range(5):
-            amplifier[i].input += [output]
+            amplifier[i].add_input(output)
             amplifier[i].run()
-            output = amplifier[i].output[-1]
-        if not loop or amplifier[4].finished:
+            output = amplifier[i].pop_output()
+        if not loop or amplifier[4].is_finished():
             return output
 
 
