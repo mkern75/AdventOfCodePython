@@ -54,6 +54,16 @@ def load_grid(filename, separator=None):
     return grid
 
 
+def load_int_grid(filename, separator=None):
+    grid = []
+    for line in load_lines(filename):
+        if separator is not None and separator in line:
+            grid += [list(map(int, line.split(separator)))]
+        else:
+            grid += [[int(c) for c in line]]
+    return grid
+
+
 def load_int_program(filename):
     return load_numbers(filename, ",")
 
