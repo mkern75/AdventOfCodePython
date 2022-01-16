@@ -1,7 +1,6 @@
-import time
+from utils import load_lines
 from collections import defaultdict, namedtuple
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day08.txt"
 
 Instruction = namedtuple("Instruction", ["reg", "op", "val", "if_reg", "if_comp", "if_val"])
@@ -9,8 +8,7 @@ Instruction = namedtuple("Instruction", ["reg", "op", "val", "if_reg", "if_comp"
 
 def load_instructions(filename):
     instructions = []
-    lines = [line.rstrip('\n') for line in open(filename, "r")]
-    for line in lines:
+    for line in load_lines(filename):
         s = line.split()
         instructions += [Instruction(s[0], s[1], int(s[2]), s[4], s[5], int(s[6]))]
     return instructions
@@ -34,8 +32,7 @@ instructions = load_instructions(INPUT_FILE)
 registers, highest_value = process(instructions)
 
 ans1 = max(registers.values())
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print("part 1:", ans1)
 
 ans2 = highest_value
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print("part 2:", ans2)

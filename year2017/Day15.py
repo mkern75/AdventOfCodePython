@@ -1,10 +1,9 @@
-import time
+from utils import load_lines, tic, toc
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day15.txt"
 
-file = open(INPUT_FILE, "r")
-lines = [line.rstrip('\n') for line in file]
+tic()
+lines = load_lines(INPUT_FILE)
 
 a = int(lines[0].split()[4])
 b = int(lines[1].split()[4])
@@ -15,9 +14,9 @@ for i in range(40000000):
     b = (b * 48271) % 2147483647
     if a % 65536 == b % 65536:
         ans1 += 1
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print(f"part 1: {ans1}  ({toc():.3f}s)")
 
+tic()
 a = int(lines[0].split()[4])
 b = int(lines[1].split()[4])
 
@@ -31,4 +30,4 @@ for i in range(5000000):
         b = (b * 48271) % 2147483647
     if a % 65536 == b % 65536:
         ans2 += 1
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print(f"part 2: {ans2}  ({toc():.3f}s)")

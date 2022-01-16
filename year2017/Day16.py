@@ -1,12 +1,9 @@
-import time
+from utils import load_words
 import functools
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day16.txt"
 
-file = open(INPUT_FILE, "r")
-lines = [line.rstrip('\n') for line in file]
-MOVES = lines[0].split(",")
+MOVES = load_words(INPUT_FILE, ",")
 
 
 @functools.lru_cache(maxsize=None)  # DP with a single line of code!
@@ -32,12 +29,12 @@ def dance(programs):
 
 programs = "abcdefghijklmnop"
 ans1 = dance(programs)
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print("part 1:", ans1)
 
 programs = "abcdefghijklmnop"
 i = 0
 dance_hist = {programs: i}
+ans2 = ""
 while True:
     i += 1
     programs = dance(programs)
@@ -54,4 +51,4 @@ while True:
         break
     else:
         dance_hist[programs] = i
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print("part 2:", ans2)

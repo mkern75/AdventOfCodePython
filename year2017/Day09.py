@@ -1,11 +1,10 @@
-import time
+from utils import load_line
 from collections import namedtuple
+
+INPUT_FILE = "./year2017/data/day09.txt"
 
 Group = namedtuple("Group", ["sub_groups"])
 Garbage = namedtuple("Garbage", ["text"])
-
-t0 = time.time()
-INPUT_FILE = "./year2017/data/day09.txt"
 
 
 def parse(s, pos=0):
@@ -31,9 +30,7 @@ def parse(s, pos=0):
 
 
 def load_groups(filename):
-    file = open(filename, "r")
-    lines = [line.rstrip('\n') for line in file]
-    group, _ = parse(lines[0])
+    group, _ = parse(load_line(filename))
     return group
 
 
@@ -62,9 +59,9 @@ def count_garbage(groups):
 
 
 groups = load_groups(INPUT_FILE)
+
 ans1 = score(groups)
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print("part 1:", ans1)
 
 ans2 = count_garbage(groups)
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print("part 2:", ans2)

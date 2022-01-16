@@ -1,6 +1,5 @@
-import time
+from utils import load_lines
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day04.txt"
 
 
@@ -24,16 +23,14 @@ def valid2(words):
     return True
 
 
-file = open(INPUT_FILE, "r")
-lines = [line.rstrip('\n') for line in file]
+lines = load_lines(INPUT_FILE)
 
 ans1 = 0
 for line in lines:
     ans1 += 1 if valid(list(line.split())) else 0
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print("part 1:", ans1)
 
 ans2 = 0
 for line in lines:
     ans2 += 1 if valid2(list(line.split())) else 0
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print("part 2:", ans2)

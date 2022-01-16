@@ -1,7 +1,6 @@
-import time
+from utils import load_number
 from collections import defaultdict
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day03.txt"
 
 
@@ -45,14 +44,10 @@ def number_on_spirale_above_target_part2(target):
         k += 1
 
 
-file = open(INPUT_FILE, "r")
-lines = [line.rstrip('\n') for line in file]
-
-target = int(lines[0])
+target = load_number(INPUT_FILE)
 
 ans1 = n_steps_part1(target)
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print("part 1:", ans1)
 
 ans2 = number_on_spirale_above_target_part2(target)
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print("part 2:", ans2)

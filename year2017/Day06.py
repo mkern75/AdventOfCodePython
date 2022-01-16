@@ -1,6 +1,5 @@
-import time
+from utils import load_numbers
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day06.txt"
 
 
@@ -14,10 +13,7 @@ def redistribute(state):
     return tuple(new_state)
 
 
-file = open(INPUT_FILE, "r")
-lines = [line.rstrip('\n') for line in file]
-
-state = tuple([int(i) for i in lines[0].split()])
+state = tuple(load_numbers(INPUT_FILE))
 cycle = 0
 seen_in_cycle = {}
 
@@ -26,7 +22,5 @@ while state not in seen_in_cycle:
     state = redistribute(state)
     cycle += 1
 
-print("part 1:", cycle, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
-
-print("part 2:", cycle - seen_in_cycle[state], f"  ({time.time() - t1:.3f}s)")
+print("part 1:", cycle)
+print("part 2:", cycle - seen_in_cycle[state])

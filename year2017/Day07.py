@@ -1,8 +1,7 @@
-import time
+from utils import load_lines
 import re
 from collections import namedtuple, Counter
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day07.txt"
 
 Program = namedtuple("Program", ["name", "weight", "sub_program_names"])
@@ -10,9 +9,7 @@ Program = namedtuple("Program", ["name", "weight", "sub_program_names"])
 
 def parse_input(filename):
     programs = {}
-    file = open(filename, "r")
-    lines = [line.rstrip('\n') for line in file]
-    for line in lines:
+    for line in load_lines(filename):
         m = re.compile(r"^([a-z]+) \(([0-9]+)\)(?: -> )?(.*)$").match(line)
         name = m.group(1)
         weight = int(m.group(2))
@@ -70,8 +67,7 @@ def find_corrected_weight(programs):
 programs = parse_input(INPUT_FILE)
 
 ans1 = find_bottom(programs).name
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print("part 1:", ans1)
 
 ans2 = find_corrected_weight(programs)
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print("part 2:", ans2)

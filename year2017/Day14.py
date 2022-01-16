@@ -1,6 +1,5 @@
-import time
+from utils import load_word, tic, toc
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day14.txt"
 
 
@@ -58,13 +57,12 @@ def count_regions(grid):
     return cnt
 
 
-file = open(INPUT_FILE, "r")
-lines = [line.rstrip('\n') for line in file]
-
-grid = build_grid(lines[0])
+tic()
+key = load_word(INPUT_FILE)
+grid = build_grid(key)
 ans1 = sum(row.count("#") for row in grid)
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print(f"part 1: {ans1}  ({toc():.3f}s)")
 
+tic()
 ans2 = count_regions(grid)
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print(f"part 2: {ans2}  ({toc():.3f}s)")

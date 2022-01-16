@@ -1,6 +1,5 @@
-import time
+from utils import load_line
 
-t0 = time.time()
 INPUT_FILE = "./year2017/data/day10.txt"
 
 
@@ -13,20 +12,18 @@ def reverse(l, rev_length, pos, skip):
     return l2, pos, skip
 
 
-file = open(INPUT_FILE, "r")
-lines = [line.rstrip('\n') for line in file]
+line = load_line(INPUT_FILE)
 
-seq_rev_lengths = [int(i) for i in lines[0].split(",")]
+seq_rev_lengths = [int(i) for i in line.split(",")]
 L = [i for i in range(256)]
 pos, skip = 0, 0
 for rev_length in seq_rev_lengths:
     L, pos, skip = reverse(L, rev_length, pos, skip)
 
 ans1 = L[0] * L[1]
-print("part 1:", ans1, f"  ({time.time() - t0:.3f}s)")
-t1 = time.time()
+print("part 1:", ans1)
 
-seq_rev_lengths = [ord(c) for c in lines[0]] + [17, 31, 73, 47, 23]
+seq_rev_lengths = [ord(c) for c in line] + [17, 31, 73, 47, 23]
 L = [i for i in range(256)]
 pos, skip = 0, 0
 for _ in range(64):
@@ -40,4 +37,4 @@ for i in range(16):
     knot_hash += hex(xor)[2:].zfill(2)
 
 ans2 = knot_hash
-print("part 2:", ans2, f"  ({time.time() - t1:.3f}s)")
+print("part 2:", ans2)
