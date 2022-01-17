@@ -72,6 +72,10 @@ def sgn(n):
     return 1 if n > 0 else (-1 if n < 0 else 0)
 
 
+def manhatten_dist(p1, p2):
+    return sum([abs(p1[i] - p2[i]) for i in range(len(p1))])
+
+
 def is_prime(n):
     if n == 2 or n == 3:
         return True
