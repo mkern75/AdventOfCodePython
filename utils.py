@@ -1,4 +1,5 @@
 import time
+import re
 
 UTILS_TIME = time.time()
 
@@ -68,12 +69,28 @@ def load_int_program(filename):
     return load_numbers(filename, ",")
 
 
+def load_text_blocks(filename):
+    blocks, block = [], []
+    lines = load_lines(filename)
+    for i, line in enumerate(lines):
+        if line != "":
+            block += [line]
+        if line == "" or i == len(lines) - 1:
+            blocks += [block]
+            block = []
+    return blocks
+
+
 def sgn(n):
     return 1 if n > 0 else (-1 if n < 0 else 0)
 
 
 def manhatten_dist(p1, p2):
     return sum([abs(p1[i] - p2[i]) for i in range(len(p1))])
+
+
+def is_int(s):
+    return re.match(r"^[-+]?\d+$", s) is not None
 
 
 def is_prime(n):
