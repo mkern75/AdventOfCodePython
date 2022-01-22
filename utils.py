@@ -76,7 +76,8 @@ def load_text_blocks(filename):
         if line != "":
             block += [line]
         if line == "" or i == len(lines) - 1:
-            blocks += [block]
+            if len(block) > 0:
+                blocks += [block]
             block = []
     return blocks
 
