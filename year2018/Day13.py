@@ -2,6 +2,7 @@ from utils import load_grid, tic, toc
 
 INPUT_FILE = "./year2018/data/day13.txt"
 
+
 class Cart:
     def __init__(self, row, col, drow, dcol, turn=0):
         self.row = row
@@ -92,9 +93,9 @@ def get_location_last_cart(track, carts):
 tic()
 track, carts = load_track_and_carts(INPUT_FILE)
 row, col = get_first_crash(track, carts)
-print(f"part1 : {col},{row}   ({toc():.3f}s)")
+print(f"part 1: {col},{row}   ({toc():.3f}s)")
 
 tic()
 track, carts = load_track_and_carts(INPUT_FILE)
 row, col = get_location_last_cart(track, carts)
-print(f"part2 : {col},{row}   ({toc():.3f}s)")
+print(f"part 2: {col},{row}   ({toc():.3f}s)")
