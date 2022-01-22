@@ -81,6 +81,13 @@ def load_text_blocks(filename):
     return blocks
 
 
+def display_grid(grid):
+    for r in range(len(grid)):
+        for c in range(len(grid[r])):
+            print(grid[r][c], end="")
+        print()
+
+
 def sgn(n):
     return 1 if n > 0 else (-1 if n < 0 else 0)
 
