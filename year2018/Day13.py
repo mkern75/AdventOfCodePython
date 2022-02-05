@@ -3,7 +3,6 @@ from utils import load_grid, tic, toc
 INPUT_FILE = "./year2018/data/day13.txt"
 
 
-
 class Cart:
     def __init__(self, row, col, drow, dcol, turn=0):
         self.row = row
