@@ -55,14 +55,6 @@ def n_neighbour_bugs_part2(r, c, lvl, grids):
     return n
 
 
-def n_bugs_in_grid(grid):
-    return sum([1 for r in range(5) for c in range(5) if grid[r, c]])
-
-
-def n_bugs_in_grids(grids):
-    return sum([n_bugs_in_grid(grid) for grid in grids.values()])
-
-
 def next_state_part1(grid):
     grid_next = defaultdict(lambda: False)
     for r in range(5):
@@ -73,17 +65,20 @@ def next_state_part1(grid):
     return grid_next
 
 
+def biodiversity(grid):
+    return sum([2 ** (r * 5 + c) for r in range(5) for c in range(5) if grid[r, c]])
+
+
 def next_state_part2(grids):
     grids_next = {}
-    for level, grid in grids.items():
-        grid_next = defaultdict(lambda: False)
+    for lvl, grid in grids.items():
+        grids_next[lvl] = defaultdict(lambda: False)
         for r in range(5):
             for c in range(5):
                 if not r == c == 2:
-                    n = n_neighbour_bugs_part2(r, c, level, grids)
+                    n = n_neighbour_bugs_part2(r, c, lvl, grids)
                     if n == 1 or (n == 2 and not grid[r, c]):
-                        grid_next[r, c] = True
-        grids_next[level] = grid_next
+                        grids_next[lvl][r, c] = True
     level_min, level_max = min(grids_next.keys()), max(grids_next.keys())
     if n_bugs_in_grid(grids_next[level_min]) > 0:
         grids_next[level_min - 1] = defaultdict(lambda: False)
@@ -92,24 +87,15 @@ def next_state_part2(grids):
     return grids_next
 
 
-def biodiversity(grid):
-    bd, i = 0, 1
-    for r in range(5):
-        for c in range(5):
-            if grid[r, c]:
-                bd += i
-            i *= 2
-    return bd
+def n_bugs_in_grid(grid):
+    return sum([1 for r in range(5) for c in range(5) if grid[r, c]])
 
 
 seen = set()
-minute = 0
 grid = load_initial_state(INPUT_FILE)
 bd = biodiversity(grid)
-
 while bd not in seen:
     seen.add(bd)
-    minute += 1
     grid = next_state_part1(grid)
     bd = biodiversity(grid)
 print("part 1:", bd)
@@ -117,5 +103,4 @@ print("part 1:", bd)
 grids = {0: load_initial_state(INPUT_FILE), 1: defaultdict(lambda: False), -1: defaultdict(lambda: False)}
 for minute in range(1, 201):
     grids = next_state_part2(grids)
-ans2 = n_bugs_in_grids(grids)
-print("part 2:", ans2)
+print("part 2:", sum([n_bugs_in_grid(grid) for grid in grids.values()]))
