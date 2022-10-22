@@ -87,7 +87,11 @@ class IntcodeComputer:
     def get_ascii_output(self):
         s = ""
         while self.has_output():
-            s += chr(self.pop_output())
+            i = self.pop_output()
+            if 0 <= i <= 0x110000:
+                s += chr(i)
+            else:
+                s += str(i)
         return s
 
     def is_finished(self):
