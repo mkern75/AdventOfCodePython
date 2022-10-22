@@ -80,6 +80,16 @@ class IntcodeComputer:
     def has_output(self, n=1):
         return len(self._output) >= n
 
+    def add_ascii_input(self, s):
+        for c in s:
+            self.add_input(ord(c))
+
+    def get_ascii_output(self):
+        s = ""
+        while self.has_output():
+            s += chr(self.pop_output())
+        return s
+
     def is_finished(self):
         return self._finished
 
