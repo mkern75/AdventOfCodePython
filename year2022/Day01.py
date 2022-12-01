@@ -1,13 +1,14 @@
-INPUT_FILE = "./year2022/data/day01.txt"
+import utils
 
-elves, elf = [], 0
-for cal in [line.rstrip('\n') for line in open(INPUT_FILE, "r")]:
+INPUT_FILE = "./year2022/data/day01.txt"
+data = utils.load_lines(INPUT_FILE)
+
+elves = [0]
+for cal in data:
     if cal == "":
-        elves += [elf]
-        elf = 0
+        elves += [0]
     else:
-        elf += int(cal)
-elves += [elf]
+        elves[-1] += int(cal)
 
 elves.sort(reverse=True)
 ans1 = elves[0]
