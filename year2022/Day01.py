@@ -1,10 +1,7 @@
-import utils
-
 INPUT_FILE = "./year2022/data/day01.txt"
-data = utils.load_lines(INPUT_FILE)
 
 elves = [0]
-for cal in data:
+for cal in [line.rstrip('\n') for line in open(INPUT_FILE, "r")]:
     if cal == "":
         elves += [0]
     else:
