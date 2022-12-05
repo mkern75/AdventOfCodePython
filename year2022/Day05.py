@@ -9,10 +9,10 @@ data_start, data_proc = data[:split], data[split + 1:]
 
 def load_start_stacks(data_start):
     stacks = defaultdict(list)
-    for line in data_start[:-1]:
+    for line in data_start[:-1][::-1]:  # ignore last line with stack numbers; reverse order to build stacks bottom up
         for i in range(0, len(line), 4):
             if line[i] == "[":
-                stacks[i // 4 + 1].insert(0, line[i + 1])
+                stacks[i // 4 + 1] += [line[i + 1]]
     return stacks
 
 
