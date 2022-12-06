@@ -4,6 +4,7 @@ class Device:
         self.reg = [0] * 6
         self.ip = 0
         self.debug = debug
+        self.finished = False
         if program[0].startswith("#ip"):
             self.ip_reg = int(program[0].split()[1])
             self.program = program[1:]
@@ -11,9 +12,11 @@ class Device:
             self.ip_reg = None
             self.program = program
 
-    def reset(self, program):
+    def reset(self, program, debug=False):
         self.reg = [0] * 6
         self.ip = 0
+        self.debug = debug
+        self.finished = False
         if program[0].startswith("#ip"):
             self.ip_reg = int(program[0].split()[1])
             self.program = program[1:]
@@ -21,8 +24,11 @@ class Device:
             self.ip_reg = None
             self.program = program
 
+    def is_finished(self):
+        return self.finished
+
     def run(self):
-        while 0 <= self.ip < len(self.program):
+        while not self.is_finished():
             self.run_one_cycle()
 
     def run_one_cycle(self):
@@ -71,3 +77,5 @@ class Device:
         if self.ip_reg is not None:
             self.ip = self.reg[self.ip_reg]
         self.ip += 1
+        if not 0 <= self.ip < len(self.program):
+            self.finished = True
