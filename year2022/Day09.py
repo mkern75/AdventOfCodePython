@@ -10,14 +10,7 @@ def sgn(n):
 
 def follow(head, tail):
     dx, dy = head[0] - tail[0], head[1] - tail[1]
-    if abs(dx) == 2 and dy == 0:
-        return tail[0] + sgn(dx), tail[1]
-    elif abs(dx) == 0 and dy == 2:
-        return tail[0], tail[1] + sgn(dy)
-    elif abs(dx) >= 2 or abs(dy) >= 2:
-        return tail[0] + sgn(dx), tail[1] + sgn(dy)
-    else:
-        return tail
+    return tail if abs(dx) <= 1 and abs(dy) <= 1 else (tail[0] + sgn(dx), tail[1] + sgn(dy))
 
 
 def n_positions(n_knots):
