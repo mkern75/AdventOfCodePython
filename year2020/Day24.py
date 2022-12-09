@@ -23,8 +23,8 @@ def flip(black):
 
 
 black = set()
-for move in data:
-    c = coord(move)
+for tile in data:
+    c = coord(tile)
     if c in black:
         black.remove(c)
     else:
