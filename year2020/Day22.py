@@ -28,13 +28,9 @@ class Game1:
 
 
 class Game2:
-    game_count = 0
-
     def __init__(self, deck1, deck2, debug=False):
         self.deck1 = deque(deck1)
         self.deck2 = deque(deck2)
-        Game2.game_count += 1
-        self.game = Game2.game_count
         self.hist = set()
         self.debug = debug
         self.winner = None
