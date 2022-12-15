@@ -6,6 +6,7 @@ sensors = [tuple(map(int, re.findall(r"(-?\d+)", line))) for line in data]
 
 
 def merge(r_from, r_to, range_list):
+    """Merges a range [r_from, r_to] into a list of non-overlallping ranges."""
     range_list_tmp = []
     for i, (r2_from, r2_to) in enumerate(range_list):
         if r2_from <= r_from <= r_to <= r2_to:
@@ -23,6 +24,7 @@ def merge(r_from, r_to, range_list):
 
 
 def calc_x_ranges_with_no_beacons(y):
+    """Calculates the ranges of x coordinates for a given y coordinate that are without beacons."""
     no_beacons = []
     for xs, ys, xb, yb in sensors:
         d = abs(xs - xb) + abs(ys - yb)
@@ -41,6 +43,7 @@ def calc_x_ranges_with_no_beacons(y):
 
 
 def count_positions(ranges, consider_from=None, consider_to=None):
+    """Counts the number of positions covered by a list of ranges. Lower and upper thresholds can be provided."""
     total = 0
     for value_from, value_to in ranges:
         if consider_from is not None:
@@ -56,7 +59,7 @@ def count_positions(ranges, consider_from=None, consider_to=None):
 
 
 # part 1
-ranges_with_no_beacon = calc_x_ranges_with_no_beacons(2000000)
+ranges_with_no_beacon = calc_x_ranges_with_no_beacons(2_000_000)
 ans1 = count_positions(ranges_with_no_beacon)
 print(f"part 1: {ans1}")
 
@@ -73,6 +76,6 @@ for y in range(pos_min, pos_max + 1):
         x_candidates |= set([v_to + 1 for _, v_to in ranges_with_no_beacon if pos_min <= v_to + 1 <= pos_max])
         x_candidates -= set(xb for xb, _ in known_beacons)
         x, = x_candidates
-        ans2 = x * 4000000 + y
+        ans2 = x * 4_000_000 + y
         print(f"part 2: {ans2}")
         break
