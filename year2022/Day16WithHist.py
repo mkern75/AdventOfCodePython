@@ -38,16 +38,20 @@ def compress_valves(valves):
 
 
 def solve(valves, time_max, n_players, open_valves=0):
-    queue = deque([(1, "AA", 0, 0, open_valves)])
+    queue = deque([(1, "AA", 0, 0, open_valves, [])])
 
-    score_best = 0
+    score_best, hist_best = 0, []
     while queue:
-        time, vid, score, pressure, open_valves = queue.pop()
+        time, vid, score, pressure, open_valves, hist = queue.pop()
 
         if time == time_max:
             if n_players > 1:
-                score += solve(valves, time_max, n_players - 1, open_valves)
-            score_best = max(score_best, score)
+                score_other, hist_other = solve(valves, time_max, n_players - 1, open_valves)
+                score = score + score_other
+                hist = [tuple(hist), tuple(hist_other)]
+            if score > score_best:
+                score_best = score
+                hist_best = hist
             continue
 
         for vid_next, dist in valves[vid].connections.items():
@@ -57,13 +61,14 @@ def solve(valves, time_max, n_players, open_valves=0):
                     pressure_next = pressure + valves[vid_next].flow_rate
                     score_next = score + dist * pressure + 1 * pressure_next
                     open_valves_next = open_valves | valves[vid_next].bit
-                    queue.append((time_next, vid_next, score_next, pressure_next, open_valves_next))
-        queue.append((time_max, vid, score + (time_max - time) * pressure, pressure, open_valves))
+                    hist_next = hist + [vid_next + "/" + str(time_next)]
+                    queue.append((time_next, vid_next, score_next, pressure_next, open_valves_next, hist_next))
+        queue.append((time_max, vid, score + (time_max - time) * pressure, pressure, open_valves, hist))
 
-    return score_best
+    return score_best, hist_best
 
 
 valves = load_valves(data)
 valves = compress_valves(valves)
-print(f"part 1: {solve(valves, 30, 1)}")  # PyPy: 0.3s  Python: 0.4s
-print(f"part 2: {solve(valves, 26, 2)}")  # PyPy:  74s  Python: 241s
+print(f"part 1: {solve(valves, 30, 1)}")  # PyPy: 0.4s  Python: 0.4s
+print(f"part 2: {solve(valves, 26, 2)}")  # PyPy:  96s  Python: 255s
