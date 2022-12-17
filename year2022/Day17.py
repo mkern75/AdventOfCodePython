@@ -58,9 +58,9 @@ def simulate_single_rock(rock, jet_idx, top):
 
 
 def simulate(n_rocks):
-    idx, top = 0, -1
+    jet_idx, top = 0, -1
     for cycle in range(n_rocks):
-        idx, top = simulate_single_rock(ROCKS[cycle % len(ROCKS)], idx, top)
+        jet_idx, top = simulate_single_rock(ROCKS[cycle % len(ROCKS)], jet_idx, top)
     return top + 1
 
 
