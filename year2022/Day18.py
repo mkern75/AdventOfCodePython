@@ -29,8 +29,8 @@ def is_trapped(cube):
             if cn not in visited and cn not in cubes:
                 queue.append(cn)
                 visited.add(cn)
-    for c in visited:  # if none of the explored connected cubes is on the outside, then all these cubes are trapped
-        cache[c] = True
+    for cv in visited:  # if none of the explored connected cubes is on the outside, then all these cubes are trapped
+        cache[cv] = True
     return cache[cube]
 
 
@@ -39,6 +39,7 @@ for cube in cubes:
     for neighbour in neighbours(cube):
         if neighbour not in cubes:
             ans1 += 1
-            ans2 += int(not is_trapped(neighbour))
+            if not is_trapped(neighbour):
+                ans2 += 1
 print(f"part 1: {ans1}")
 print(f"part 2: {ans2}")
