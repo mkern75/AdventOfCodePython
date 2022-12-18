@@ -1,10 +1,10 @@
 INPUT_FILE = "./year2022/data/day18.txt"
 data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
-cubes = set(tuple(map(int, line.split(","))) for line in data)
+lava = set(tuple(map(int, line.split(","))) for line in data)
 
 cache = {}  # caching results for whether cube is trapped
-coord_min = [min(cube[i] for cube in cubes) for i in range(3)]
-coord_max = [max(cube[i] for cube in cubes) for i in range(3)]
+coord_min = [min(cube[i] for cube in lava) for i in range(3)]
+coord_max = [max(cube[i] for cube in lava) for i in range(3)]
 
 
 def neighbours(cube):
@@ -26,7 +26,7 @@ def is_trapped(cube):
                 cache[cv] = cache[c]
             return cache[cube]
         for cn in neighbours(c):  # explore 6 neighbours
-            if cn not in visited and cn not in cubes:
+            if cn not in visited and cn not in lava:
                 queue.append(cn)
                 visited.add(cn)
     for cv in visited:  # if none of the explored connected cubes is on the outside, then all these cubes are trapped
@@ -35,9 +35,9 @@ def is_trapped(cube):
 
 
 ans1, ans2 = 0, 0
-for cube in cubes:
+for cube in lava:
     for neighbour in neighbours(cube):
-        if neighbour not in cubes:
+        if neighbour not in lava:
             ans1 += 1
             if not is_trapped(neighbour):
                 ans2 += 1
