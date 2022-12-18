@@ -26,7 +26,7 @@ def is_trapped(cube):
         return cache[cube]
     queue, visited = [cube], {cube}
     while queue:
-        c = queue.pop()
+        c = queue.pop(0)
         if any(c[i] <= coord_min[i] or c[i] >= coord_max[i] for i in range(3)):  # at border => not trapped
             cache[c] = False
         if c in cache:  # already known => save results for all visited cubes
