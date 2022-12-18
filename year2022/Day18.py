@@ -2,23 +2,15 @@ INPUT_FILE = "./year2022/data/day18.txt"
 data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
 cubes = set(tuple(map(int, line.split(","))) for line in data)
 
+cache = {}  # caching results for whether cube is trapped
+coord_min = [min(cube[i] for cube in cubes) for i in range(3)]
+coord_max = [max(cube[i] for cube in cubes) for i in range(3)]
+
 
 def neighbours(cube):
     """ Returns the six neighbour cubes."""
     return [(cube[0] + d0, cube[1] + d1, cube[2] + d2) for d0, d1, d2 in
             [(-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0), (0, 0, -1), (0, 0, 1)]]
-
-
-ans1 = 0
-for cube in cubes:
-    for neigbour in neighbours(cube):
-        if neigbour not in cubes:
-            ans1 += 1
-print(f"part 1: {ans1}")
-
-cache = {}  # caching results for whether cube is trapped
-coord_min = [min(cube[i] for cube in cubes) for i in range(3)]
-coord_max = [max(cube[i] for cube in cubes) for i in range(3)]
 
 
 def is_trapped(cube):
@@ -42,9 +34,11 @@ def is_trapped(cube):
     return cache[cube]
 
 
-ans2 = 0
+ans1, ans2 = 0, 0
 for cube in cubes:
     for neighbour in neighbours(cube):
-        if neighbour not in cubes and not is_trapped(neighbour):
-            ans2 += 1
+        if neighbour not in cubes:
+            ans1 += 1
+            ans2 += int(not is_trapped(neighbour))
+print(f"part 1: {ans1}")
 print(f"part 2: {ans2}")
