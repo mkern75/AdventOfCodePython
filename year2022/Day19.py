@@ -13,12 +13,16 @@ def max_geodes(blueprint, time):
                          (blueprint[3], blueprint[4], 0, 0),
                          (blueprint[5], 0, blueprint[6], 0)]
 
-    queue = deque([(time, (0, 0, 0, 0), (1, 0, 0, 0), -1)])
+    queue, visited = deque([(time, (0, 0, 0, 0), (1, 0, 0, 0), -1)]), set()
     geo_max = 0
 
     while queue:
 
         t, m, r, n = queue.popleft()  # time, material (tuple), robots (tuple), what robot to build next
+
+        if (t, m, r, n) in visited:
+            continue
+        visited.add((t, m, r, n))
 
         if t == 0:
             geo_max = max(geo_max, m[3])
@@ -52,7 +56,7 @@ for i in range(len(blueprints)):
     n_geodes = max_geodes(blueprints[i], T)
     print(f"{n_geodes} geode collected")
     ans1 += n_geodes * blueprints[i][0]
-print(f"part 1: {ans1}")  # PyPy: 26s
+print(f"part 1: {ans1}")  # PyPy: 18s
 
 ans2, T = 1, 32
 for i in range(3):
@@ -60,4 +64,4 @@ for i in range(3):
     n_geodes = max_geodes(blueprints[i], T)
     print(f"{n_geodes} geode collected")
     ans2 *= n_geodes
-print(f"part 2: {ans2}")  # PyPy: 236s
+print(f"part 2: {ans2}")  # PyPy: 112s
