@@ -3,30 +3,28 @@ data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
 N = len(data)
 
 
-def single_move(nums, num):
-    idx = nums.index(num)
-    idx_new = (idx + num[0]) % (N - 1)
-    nums.remove(num)
-    nums.insert(idx_new, num)
+def mix(nums, order):
+    for n in order:
+        idx = nums.index(n)
+        idx_new = (idx + n[0]) % (N - 1)
+        nums.remove(n)
+        nums.insert(idx_new, n)
+
+
+def sum_of_grove_coordinates(nums):
+    idx_zero = next(i for i, n in enumerate(nums) if n[0] == 0)
+    return sum(nums[(idx_zero + 1000 * i) % N][0] for i in range(1, 4))
 
 
 # part 1
 orig = [(int(l), i) for i, l in enumerate(data)]
 nums = [num for num in orig]
-for num in orig:
-    single_move(nums, num)
-zero = next(num for num in orig if num[0] == 0)
-idx_zero = nums.index(zero)
-ans1 = nums[(idx_zero + 1000) % N][0] + nums[(idx_zero + 2000) % N][0] + nums[(idx_zero + 3000) % N][0]
-print(f"part 1: {ans1}")
+mix(nums, orig)
+print(f"part 1: {sum_of_grove_coordinates(nums)}")
 
 # part 2
 orig = [(int(l) * 811589153, i) for i, l in enumerate(data)]
 nums = [num for num in orig]
 for _ in range(10):
-    for num in orig:
-        single_move(nums, num)
-zero = next(num for num in orig if num[0] == 0)
-idx_zero = nums.index(zero)
-ans2 = nums[(idx_zero + 1000) % N][0] + nums[(idx_zero + 2000) % N][0] + nums[(idx_zero + 3000) % N][0]
-print(f"part 2: {ans2}")
+    mix(nums, orig)
+print(f"part 2: {sum_of_grove_coordinates(nums)}")
