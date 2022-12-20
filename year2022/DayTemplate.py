@@ -1,9 +1,12 @@
 import utils
+import re
+from collections import defaultdict, deque, Counter
+from functools import lru_cache
 
-INPUT_FILE = "./year2022/data/day09test.txt"
-# INPUT_FILE = "./year2022/data/day09.txt"
-
-lines = utils.load_lines(INPUT_FILE)
+INPUT_FILE = "./year2022/data/day20test.txt"
+# INPUT_FILE = "./year2022/data/day20.txt"
+data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
+# lines = utils.load_lines(INPUT_FILE)
 # words = utils.load_words(INPUT_FILE)
 # nums = utils.load_numbers(INPUT_FILE)
 # grid = utils.load_grid(INPUT_FILE)
@@ -13,7 +16,7 @@ lines = utils.load_lines(INPUT_FILE)
 
 ans1, ans2 = 0, 0
 
-for line in lines:
+for line in data:
     pass
 
 # for r in range(R):
