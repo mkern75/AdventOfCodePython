@@ -6,6 +6,7 @@ from functools import lru_cache
 INPUT_FILE = "./year2022/data/day20test.txt"
 # INPUT_FILE = "./year2022/data/day20.txt"
 data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
+N = len(data)
 # lines = utils.load_lines(INPUT_FILE)
 # words = utils.load_words(INPUT_FILE)
 # nums = utils.load_numbers(INPUT_FILE)
