@@ -1,11 +1,9 @@
-from math import isqrt
-
 INPUT_FILE = "./year2022/data/day22.txt"
 segments = [[line.rstrip('\n') for line in x.splitlines()] for x in open(INPUT_FILE).read().split("\n\n")]
 
 # board (0-based index) and path information
 board = {(r, c): tile for r, line in enumerate(segments[0]) for c, tile in enumerate(line) if tile != " "}
-N = isqrt(len(board) // 6)
+N = 50
 path = segments[1][0].replace("R", " R ").replace("L", " L ").split()
 path = [int(x) if x.isdigit() else x for x in path]
 
@@ -14,8 +12,11 @@ def turn(dr, dc, mv):
     return (-dc, dr) if mv == "L" else (dc, -dr)
 
 
-# this method only works for the specific shape of the cube net in my puzzle input
-# todo: generalise so that it works with any net shape
+# This method only works for the cube net shape below (other shapes require changes):
+#    1 2
+#    3 
+#  4 5
+#  6
 def move2(r, c, dr, dc):
     rn, cn = r + dr, c + dc
     drn, dcn = dr, dc
