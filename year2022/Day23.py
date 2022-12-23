@@ -33,9 +33,9 @@ def moves_elves_single_cycle(elves, cycle):
 def moves_elves(elves, max_cycle=inf):
     cycle = 0  # zero-based
     while True:
-        elves, has_moved = moves_elves_single_cycle(elves, cycle)
+        elves, have_moved = moves_elves_single_cycle(elves, cycle)
         cycle += 1
-        if not has_moved or cycle == max_cycle:
+        if not have_moved or cycle == max_cycle:
             return elves, cycle
 
 
