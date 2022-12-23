@@ -1,32 +1,32 @@
 from collections import Counter
 from math import inf
 
-NEIGBOURS = [(-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0,), (1, -1), (0, -1)]
-DIRECTIONS = [[(-1, 0), (-1, -1), (-1, 1)],
-              [(1, 0), (1, -1), (1, 1)],
-              [(0, -1), (1, -1), (-1, -1)],
-              [(0, 1), (1, 1), (-1, 1)]]
+NEIGHBOURS = [(-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0,), (1, -1), (0, -1)]
+MOVES = [[(-1, 0), (-1, -1), (-1, 1)],  # N
+         [(1, 0), (1, -1), (1, 1)],  # S
+         [(0, -1), (1, -1), (-1, -1)],  # W
+         [(0, 1), (1, 1), (-1, 1)]]  # E
 
 INPUT_FILE = "./year2022/data/day23.txt"
 grid = [[c for c in line.rstrip('\n')] for line in open(INPUT_FILE, "r")]
 
 
 def move_elf(elf, elves, cycle):
-    if not set((elf[0] + dr, elf[1] + dc) for dr, dc in NEIGBOURS) & elves:
+    if not set((elf[0] + dr, elf[1] + dc) for dr, dc in NEIGHBOURS) & elves:
         return elf
     for i in range(4):
-        direction = DIRECTIONS[(cycle + i) % 4]
-        if not set((elf[0] + dr, elf[1] + dc) for dr, dc in direction) & elves:
-            return elf[0] + direction[0][0], elf[1] + direction[0][1]
+        move = MOVES[(cycle + i) % 4]
+        if not set((elf[0] + dr, elf[1] + dc) for dr, dc in move) & elves:
+            return elf[0] + move[0][0], elf[1] + move[0][1]
     return elf
 
 
 def move_elves_single_cycle(elves, cycle):
-    move, counter = {}, Counter()
+    potential_move, counter = {}, Counter()
     for elf in elves:
-        move[elf] = move_elf(elf, elves, cycle)
-        counter[move[elf]] += 1
-    elves_new = set(move[elf] if counter[move[elf]] == 1 else elf for elf in elves)
+        potential_move[elf] = move_elf(elf, elves, cycle)
+        counter[potential_move[elf]] += 1
+    elves_new = set(potential_move[elf] if counter[potential_move[elf]] == 1 else elf for elf in elves)
     return elves_new, elves_new != elves
 
 
@@ -35,14 +35,14 @@ def move_elves(elves, max_cycle=inf):
     while True:
         elves, have_moved = move_elves_single_cycle(elves, cycle)
         cycle += 1
-        if not have_moved or cycle == max_cycle:
+        if cycle == max_cycle or not have_moved:
             return elves, cycle
 
 
 def count_tiles(elves):
     r_min, r_max = min(r for r, c in elves), max(r for r, c in elves)
     c_min, c_max = min(c for r, c in elves), max(c for r, c in elves)
-    return sum((r, c) not in elves for r in range(r_min, r_max + 1) for c in range(c_min, c_max + 1))
+    return (r_max - r_min + 1) * (c_max - c_min + 1) - len(elves)
 
 
 # part 1
