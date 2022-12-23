@@ -21,7 +21,7 @@ def move_elf(elf, elves, cycle):
     return elf
 
 
-def moves_elves_single_cycle(elves, cycle):
+def move_elves_single_cycle(elves, cycle):
     move, counter = {}, Counter()
     for elf in elves:
         move[elf] = move_elf(elf, elves, cycle)
@@ -30,10 +30,10 @@ def moves_elves_single_cycle(elves, cycle):
     return elves_new, elves_new != elves
 
 
-def moves_elves(elves, max_cycle=inf):
+def move_elves(elves, max_cycle=inf):
     cycle = 0  # zero-based
     while True:
-        elves, have_moved = moves_elves_single_cycle(elves, cycle)
+        elves, have_moved = move_elves_single_cycle(elves, cycle)
         cycle += 1
         if not have_moved or cycle == max_cycle:
             return elves, cycle
@@ -47,10 +47,10 @@ def count_tiles(elves):
 
 # part 1
 elves = set((r, c) for r in range(len(grid)) for c in range(len(grid[0])) if grid[r][c] == "#")
-elves, _ = moves_elves(elves, 10)
+elves, _ = move_elves(elves, 10)
 print(f"part 1: {count_tiles(elves)}")
 
 # part 2
 elves = set((r, c) for r in range(len(grid)) for c in range(len(grid[0])) if grid[r][c] == "#")
-elves, cycles = moves_elves(elves)
+elves, cycles = move_elves(elves)
 print(f"part 2: {cycles}")
