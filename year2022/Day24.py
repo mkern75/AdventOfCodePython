@@ -38,7 +38,7 @@ def get_blizzard_locations(t):
     return set((r, c) for r, c, _ in get_blizzards(t))
 
 
-def find_way(start, goal, t=0):
+def find_way_bfs(start, goal, t=0):
     q, v = deque([(start[0], start[1], t)]), set()
     while q:
         r, c, t = q.popleft()
@@ -51,14 +51,14 @@ def find_way(start, goal, t=0):
             rn, cn = r + dr, c + dc
             if 0 <= rn < R and 0 <= cn < C and (rn, cn) not in walls:
                 if (rn, cn) not in get_blizzard_locations(t + 1):
-                    q += [(rn, cn, t + 1)]
+                    q.append((rn, cn, t + 1))
 
 
 # part 1
-t1 = find_way(start, goal)
+t1 = find_way_bfs(start, goal)
 print(f"part 1: {t1}")
 
 # part 2
-t2 = find_way(goal, start, t1)
-t3 = find_way(start, goal, t2)
+t2 = find_way_bfs(goal, start, t1)
+t3 = find_way_bfs(start, goal, t2)
 print(f"part 2: {t3}")
