@@ -42,16 +42,15 @@ def find_way_bfs(start, goal, t=0):
     q, v = deque([(start[0], start[1], t)]), set()
     while q:
         r, c, t = q.popleft()
-        if (r, c) == goal:
-            return t
-        if (r, c, t) in v:
-            continue
-        v |= {(r, c, t)}
         for dr, dc in [(0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)]:
-            rn, cn = r + dr, c + dc
+            rn, cn, tn = r + dr, c + dc, t + 1
             if 0 <= rn < R and 0 <= cn < C and (rn, cn) not in walls:
-                if (rn, cn) not in get_blizzard_locations(t + 1):
-                    q.append((rn, cn, t + 1))
+                if (rn, cn) not in get_blizzard_locations(tn):
+                    if (rn, cn) == goal:
+                        return tn
+                    if (rn, cn, tn) not in v:
+                        q.append((rn, cn, tn))
+                        v.add((rn, cn, tn))
 
 
 # part 1
