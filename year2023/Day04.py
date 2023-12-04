@@ -5,13 +5,10 @@ N = len(data)
 ans1, ans2 = 0, 0
 
 n_cards = [1] * N
-
 for i, line in enumerate(data):
     ans2 += n_cards[i]
-    x, y = line.split(":")[1].split("|")
-    winning = set(map(int, x.split()))
-    have = set(map(int, y.split()))
-    n_match = len(have.intersection(winning))
+    winning, own = [set(map(int, x.split())) for x in line.split(":")[1].split("|")]
+    n_match = len(own & winning)
     if n_match:
         ans1 += 2 ** (n_match - 1)
         for j in range(n_match):
