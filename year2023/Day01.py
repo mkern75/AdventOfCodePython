@@ -1,30 +1,20 @@
 INPUT_FILE = "./year2023/data/day01.txt"
 data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
 
-DIGITS = {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9}
-DIGITS_PLUS = DIGITS | {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
-                        "eight": 8, "nine": 9}
-
-
-def first_digit(s, digits):
-    for i in range(len(s)):
-        for d in digits.keys():
-            if s[i:].startswith(d):
-                return digits[d]
-
-
-def last_digit(s, digits):
-    for i in range(len(s) - 1, -1, -1):
-        for d in digits.keys():
-            if s[i:].startswith(d):
-                return digits[d]
-
+DIGITS_SPELLED = list("one, two, three, four, five, six, seven, eight, nine".split(", "))
 
 ans1, ans2 = 0, 0
 for line in data:
-    ans1 += 10 * first_digit(line, DIGITS) + last_digit(line, DIGITS)
-for line in data:
-    ans2 += 10 * first_digit(line, DIGITS_PLUS) + last_digit(line, DIGITS_PLUS)
+    digits1, digits2 = [], []
+    for i, c in enumerate(line):
+        if c.isdigit():
+            digits1 += [int(c)]
+            digits2 += [int(c)]
+        for d, digit_spelled in enumerate(DIGITS_SPELLED, 1):
+            if line[i:].startswith(digit_spelled):
+                digits2 += [d]
+    ans1 += 10 * digits1[0] + digits1[-1]
+    ans2 += 10 * digits2[0] + digits2[-1]
 
 print(f"part 1: {ans1}")
 print(f"part 2: {ans2}")
