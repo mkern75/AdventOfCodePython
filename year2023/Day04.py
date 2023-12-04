@@ -11,10 +11,10 @@ for i, line in enumerate(data):
     x, y = line.split(":")[1].split("|")
     winning = set(map(int, x.split()))
     have = set(map(int, y.split()))
-    match = have.intersection(winning)
-    if match:
-        ans1 += 2 ** (len(match) - 1)
-        for j in range(len(match)):
+    n_match = len(have.intersection(winning))
+    if n_match:
+        ans1 += 2 ** (n_match - 1)
+        for j in range(n_match):
             n_cards[i + 1 + j] += n_cards[i]
 
 print(f"part 1: {ans1}")
