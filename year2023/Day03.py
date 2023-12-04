@@ -10,19 +10,16 @@ gears = defaultdict(list)
 for r, line in enumerate(data):
     start = 0
     while True:
-        while start < C and line[start] not in "0123456789":
-            start += 1
-        end = start
-        while end + 1 < C and line[end + 1] in "0123456789":
-            end += 1
-        if start >= C:
+        start = next((i for i in range(start, C) if line[i].isdigit()), C)
+        if start == C:
             break
+        end = next((i for i in range(start, C) if not line[i].isdigit()), C) - 1
         num = int(line[start:end + 1])
         is_part = False
         for rn in range(r - 1, r + 2):
             for cn in range(start - 1, end + 2):
                 if 0 <= rn < R and 0 <= cn < C:
-                    if data[rn][cn] not in ".0123456789":
+                    if not data[rn][cn].isdigit() and data[rn][cn] != ".":
                         is_part = True
                     if data[rn][cn] == "*":
                         gears[rn, cn] += [num]
@@ -30,9 +27,7 @@ for r, line in enumerate(data):
             ans1 += num
         start = end + 1
 
-for nums in gears.values():
-    if len(nums) == 2:
-        ans2 += nums[0] * nums[1]
+ans2 = sum(nums[0] * nums[1] for nums in gears.values() if len(nums) == 2)
 
 print(f"part 1: {ans1}")
 print(f"part 2: {ans2}")
