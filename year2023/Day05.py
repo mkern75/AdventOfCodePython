@@ -4,14 +4,14 @@ data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
 # read seed numbers from first line
 seeds = list(map(int, data[0].split(":")[1].split()))
 
-# read mappings block by block and save as tuples (src_from, src_to, dst_from, dst_to) (inclusive)
+# read mappings block by block and save as tuples (src_from, src_to, dst_from) (inclusive)
 mappings = []
 for line in data[2:]:
-    if ":" in line:
+    if "map:" in line:
         mappings += [[]]
     elif line:
         dst_from, src_from, rng_len = map(int, line.split())
-        mappings[-1] += [(src_from, src_from + rng_len - 1, dst_from, dst_from + rng_len - 1)]
+        mappings[-1] += [(src_from, src_from + rng_len - 1, dst_from)]
 
 for part in [1, 2]:
     # build seed ranges depending on part 1 or 2
@@ -25,7 +25,7 @@ for part in [1, 2]:
         rng_new = []
         while rng:
             rng_frm, rng_to = rng.pop()
-            for src_frm, src_to, dst_frm, dst_to in mapping:
+            for src_frm, src_to, dst_frm in mapping:
                 # overlap found
                 if rng_frm <= src_to and src_frm <= rng_to:
                     start, end = max(rng_frm, src_frm), min(rng_to, src_to)
