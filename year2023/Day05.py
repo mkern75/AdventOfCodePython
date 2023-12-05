@@ -1,8 +1,6 @@
 INPUT_FILE = "./year2023/data/day05.txt"
 data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
 
-ans1, ans2 = 0, 0
-
 # read seed numbers from first line
 seeds = list(map(int, data[0].split(":")[1].split()))
 
@@ -44,11 +42,6 @@ for part in [1, 2]:
                 rng_new += [(rng_frm, rng_to)]
         rng = rng_new
 
-        # calculate answer
-        if part == 1:
-            ans1 = min(a for a, _ in rng)
-        else:
-            ans2 = min(a for a, _ in rng)
-
-print(f"part 1: {ans1}")
-print(f"part 2: {ans2}")
+    # calculate answer
+    ans = min(a for a, _ in rng)
+    print(f"part {part}: {ans}")
