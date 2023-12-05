@@ -4,44 +4,37 @@ data = [line.rstrip('\n') for line in open(INPUT_FILE, "r")]
 # read seed numbers from first line
 seeds = list(map(int, data[0].split(":")[1].split()))
 
-# read mappings block by block and save as tuples (src_from, src_to, dst_from) (inclusive)
+# read mappings block by block and save as tuples
 mappings = []
 for line in data[2:]:
     if "map:" in line:
         mappings += [[]]
     elif line:
-        dst_from, src_from, rng_len = map(int, line.split())
-        mappings[-1] += [(src_from, src_from + rng_len - 1, dst_from)]
+        mappings[-1] += [tuple(map(int, line.split()))]
 
 for part in [1, 2]:
-    # build seed ranges depending on part 1 or 2
     if part == 1:
-        rng = [(x, x) for x in seeds]
+        rng = [(x, x + 1) for x in seeds]  # current ranges is list of pairs [start, end)
     else:
-        rng = [(seeds[i], seeds[i] + seeds[i + 1] - 1) for i in range(0, len(seeds), 2)]
+        rng = [(seeds[i], seeds[i] + seeds[i + 1]) for i in range(0, len(seeds), 2)]
 
-    # apply all mappings
     for mapping in mappings:
         rng_new = []
         while rng:
-            rng_frm, rng_to = rng.pop()
-            for src_frm, src_to, dst_frm in mapping:
-                # overlap found
-                if rng_frm <= src_to and src_frm <= rng_to:
-                    start, end = max(rng_frm, src_frm), min(rng_to, src_to)
-                    start_offset, end_offset = start - src_frm, end - src_frm
-                    rng_new += [(dst_frm + start_offset, dst_frm + end_offset)]
-                    # remaining unmapped parts of the range
-                    if rng_frm < start:
-                        rng += [(rng_frm, start - 1)]
-                    if end < rng_to:
-                        rng += [(end + 1, rng_to)]
+            rng_start, rng_end = rng.pop()
+            for dst_start, src_start, src_len in mapping:
+                overlap_start = max(rng_start, src_start)
+                overlap_end = min(rng_end, src_start + src_len)
+                if overlap_start < overlap_end:  # overlap found
+                    rng_new += [(dst_start + (overlap_start - src_start), dst_start + (overlap_end - src_start))]
+                    if rng_start < overlap_start:
+                        rng += [(rng_start, overlap_start)]
+                    if overlap_end < rng_end:
+                        rng += [(overlap_end, rng_end)]
                     break
             else:
-                # no mapping found, thus range stays the same
-                rng_new += [(rng_frm, rng_to)]
+                rng_new += [(rng_start, rng_end)]  # no mapping found, thus range remains the same
         rng = rng_new
 
-    # calculate answer
-    ans = min(a for a, _ in rng)
+    ans = min(start for start, _ in rng)
     print(f"part {part}: {ans}")
