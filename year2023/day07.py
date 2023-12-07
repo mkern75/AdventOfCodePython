@@ -11,18 +11,14 @@ def card_value(card, card_set):
     return card_set.index(card)
 
 
-def hand_type_value(hand, card_set, replace_joker):
-    if not replace_joker:
-        return hand_type_helper(hand, card_set)
-    else:
-        return max(hand_type_helper(hand.replace("J", card), card_set) for card in card_set)
+def hand_type_value(hand, card_set, replace_joker=False):
+    if replace_joker:
+        return max(hand_type_helper(hand.replace("J", card)) for card in card_set)
+    return hand_type_helper(hand)
 
 
-def hand_type_helper(hand, card_set):
-    freq = [0] * len(card_set)
-    for card in hand:
-        freq[card_set.index(card)] += 1
-    cnt = Counter(freq)
+def hand_type_helper(hand):
+    cnt = Counter(Counter(hand).values())
     if cnt[5] == 1:
         return 6
     elif cnt[4] == 1:
