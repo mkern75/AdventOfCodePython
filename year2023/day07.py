@@ -7,30 +7,17 @@ DECK_1 = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
 DECK_2 = ["J", "2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A"]
 
 
+def score(hand):
+    cnt = Counter(Counter(hand).values())
+    return tuple(cnt[i] for i in range(5, 0, -1))
+
+
 def card_value(card, deck):
     return deck.index(card)
 
 
 def hand_type_value(hand, deck, replace_joker=False):
     return max(score(hand.replace("J", card)) for card in deck) if replace_joker else score(hand)
-
-
-def score(hand):
-    cnt = Counter(Counter(hand).values())
-    if cnt[5] == 1:
-        return 6
-    elif cnt[4] == 1:
-        return 5
-    elif cnt[3] == 1 and cnt[2] == 1:
-        return 4
-    elif cnt[3] == 1:
-        return 3
-    elif cnt[2] == 2:
-        return 2
-    elif cnt[2] == 1:
-        return 1
-    else:
-        return 0
 
 
 def hand_value(hand, deck, replace_joker=False):
