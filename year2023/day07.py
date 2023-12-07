@@ -3,21 +3,19 @@ from collections import Counter
 INPUT_FILE = "./year2023/data/day07.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
-CARD_SET_1 = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-CARD_SET_2 = ["J", "2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A"]
+DECK_1 = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
+DECK_2 = ["J", "2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A"]
 
 
-def card_value(card, card_set):
-    return card_set.index(card)
+def card_value(card, deck):
+    return deck.index(card)
 
 
-def hand_type_value(hand, card_set, replace_joker=False):
-    if replace_joker:
-        return max(hand_type_helper(hand.replace("J", card)) for card in card_set)
-    return hand_type_helper(hand)
+def hand_type_value(hand, deck, replace_joker=False):
+    return max(score(hand.replace("J", card)) for card in deck) if replace_joker else score(hand)
 
 
-def hand_type_helper(hand):
+def score(hand):
     cnt = Counter(Counter(hand).values())
     if cnt[5] == 1:
         return 6
@@ -35,8 +33,8 @@ def hand_type_helper(hand):
         return 0
 
 
-def hand_value(hand, card_set, replace_joker=False):
-    return (hand_type_value(hand, card_set, replace_joker),) + tuple(card_value(card, card_set) for card in hand)
+def hand_value(hand, deck, replace_joker=False):
+    return (hand_type_value(hand, deck, replace_joker),) + tuple(card_value(card, deck) for card in hand)
 
 
 hands = []
@@ -44,10 +42,10 @@ for line in data:
     hand, bid = line.split()
     hands += [(hand, int(bid))]
 
-hands.sort(key=lambda hand: hand_value(hand[0], CARD_SET_1, False))
+hands.sort(key=lambda hand: hand_value(hand[0], DECK_1, False))
 ans1 = sum(rank * hand[1] for rank, hand in enumerate(hands, 1))
 
-hands.sort(key=lambda hand: hand_value(hand[0], CARD_SET_2, True))
+hands.sort(key=lambda hand: hand_value(hand[0], DECK_2, True))
 ans2 = sum(rank * hand[1] for rank, hand in enumerate(hands, 1))
 
 print(f"part 1: {ans1}")
