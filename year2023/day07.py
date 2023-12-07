@@ -16,12 +16,12 @@ def card_value(card, deck):
     return deck.index(card)
 
 
-def hand_type_value(hand, deck, replace_joker=False):
-    return max(score(hand.replace("J", card)) for card in deck) if replace_joker else score(hand)
+def hand_type_value(hand, deck, joker=False):
+    return max(score(hand.replace("J", card)) for card in deck) if joker else score(hand)
 
 
-def hand_value(hand, deck, replace_joker=False):
-    return (hand_type_value(hand, deck, replace_joker),) + tuple(card_value(card, deck) for card in hand)
+def hand_value(hand, deck, joker=False):
+    return (hand_type_value(hand, deck, joker),) + tuple(card_value(card, deck) for card in hand)
 
 
 hands = []
