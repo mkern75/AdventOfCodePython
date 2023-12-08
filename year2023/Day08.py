@@ -21,6 +21,7 @@ def calc_n_steps(start, goal_ends_with):
 
 
 ans1 = calc_n_steps("AAA", "ZZZ")
+# part 2 only works this way because of the special structure of the input; general case is much harder
 ans2 = math.lcm(*[calc_n_steps(x, "Z") for x in network.keys() if x.endswith("A")])
 
 print(f"part 1: {ans1}")
