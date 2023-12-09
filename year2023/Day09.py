@@ -6,7 +6,7 @@ def extrapolate(a: list[int]) -> int:
     res = 0
     while any(x for x in a):
         res += a[-1]
-        a = [a[i + 1] - a[i] for i in range(len(a) - 1)]
+        a = [y - x for x, y in zip(a, a[1:])]
     return res
 
 
