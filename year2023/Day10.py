@@ -40,7 +40,7 @@ ans2 = 0
 for r in range(R):
     is_inside, prev = 0, "."
     for c in range(C):
-        if (r, c) in path:
+        if (r, c) in loop:
             if grid[r][c] in ["L", "F"]:
                 prev = grid[r][c]
             elif grid[r][c] == "|" or (prev == "L" and grid[r][c] == "7") or (prev == "F" and grid[r][c] == "J"):
