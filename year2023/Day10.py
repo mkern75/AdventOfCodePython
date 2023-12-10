@@ -17,30 +17,29 @@ for r, line in enumerate(data):
 # start row and column
 r_start, c_start = next((r, c) for r in range(R) for c in range(C) if grid[r, c] == "S")
 
-# find max loop
-start_pipe, loop = ".", []
-for sp in PIPES:
-    path = [(r_start, c_start), (r_start + CONNECTS[sp][0][0], c_start + CONNECTS[sp][0][1])]
-    ok = True
+# find loop
+for start_pipe in PIPES:
+    loop = [(r_start, c_start), (r_start + CONNECTS[start_pipe][0][0], c_start + CONNECTS[start_pipe][0][1])]
+    loop_found = False
     while True:
-        if path[-1] == path[0]:
+        if loop[-1] == loop[0]:
+            loop_found = True
             break
-        if grid[path[-1]] not in PIPES:
-            ok = False
+        if grid[loop[-1]] not in PIPES:
             break
-        (r, c), pipe = path[-1], grid[path[-1]]
-        if path[-2] == (r + CONNECTS[pipe][0][0], c + CONNECTS[pipe][0][1]):
-            path += [(r + CONNECTS[pipe][1][0], c + CONNECTS[pipe][1][1])]
-        elif path[-2] == (r + CONNECTS[pipe][1][0], c + CONNECTS[pipe][1][1]):
-            path += [(r + CONNECTS[pipe][0][0], c + CONNECTS[pipe][0][1])]
+        (r, c), pipe = loop[-1], grid[loop[-1]]
+        if loop[-2] == (r + CONNECTS[pipe][0][0], c + CONNECTS[pipe][0][1]):
+            loop += [(r + CONNECTS[pipe][1][0], c + CONNECTS[pipe][1][1])]
+        elif loop[-2] == (r + CONNECTS[pipe][1][0], c + CONNECTS[pipe][1][1]):
+            loop += [(r + CONNECTS[pipe][0][0], c + CONNECTS[pipe][0][1])]
         else:
-            ok = False
             break
-    if ok and len(path) > len(loop):
-        start_pipe, loop = sp, path
-
-grid[r_start, c_start] = start_pipe
-loop = set(loop)
+    if loop_found:
+        grid[r_start, c_start] = start_pipe
+        loop = set(loop)
+        break
+else:
+    assert False
 
 ans1 = len(loop) // 2
 
