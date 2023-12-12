@@ -10,11 +10,9 @@ def calc_n_arrangements(springs: str, groups: tuple) -> int:
     known = springs.count("#")
     unknown = springs.count("?")
 
-    if known == 0 and sum_groups == 0:
+    if known == sum_groups == 0:
         return 1
-    if known + unknown < sum_groups:
-        return 0
-    if known > sum_groups:
+    if not (known <= sum_groups <= known + unknown):
         return 0
 
     res = 0
@@ -35,10 +33,7 @@ for line in data:
     springs, info = line.split()
     groups = tuple(map(int, info.split(",")))
     ans1 += calc_n_arrangements(springs, groups)
-
-    springs = (springs + "?") * 4 + springs
-    groups = groups * 5
-    ans2 += calc_n_arrangements(springs, groups)
+    ans2 += calc_n_arrangements((springs + "?") * 4 + springs, groups * 5)
 
 print(f"part 1: {ans1}")
 print(f"part 2: {ans2}")
