@@ -44,20 +44,17 @@ ans1 = calc_load(grid)
 
 # part 2
 grid = [list(line) for line in data]  # restart
-hist = []
+hist = [deepcopy(grid)]
 while True:
     grid = run_one_cycle(grid)
     if grid in hist:
         break
     hist += [deepcopy(grid)]
 
-
-hist_len = len(hist)
+cycles = 1_000_000_000
 idx = hist.index(grid)
-period = hist_len - idx
-cycle = 1000000000
-i = (cycle - idx - 1) % period
-ans2 = calc_load(hist[idx + i])
+period = len(hist) - idx
+ans2 = calc_load(hist[idx + (cycles - idx) % period])
 
 print(f"part 1: {ans1}")
 print(f"part 2: {ans2}")
