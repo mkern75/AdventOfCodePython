@@ -14,17 +14,15 @@ ans1 = sum(map(aoc_hash, data))
 
 boxes = [{} for _ in range(256)]
 for step in data:
-    i = next(j for j, c in enumerate(step) if c in "=-")
-    label = step[:i]
-    box_number = aoc_hash(label)
-    op = step[i]
-    lens = int(step[(i + 1):]) if op == "=" else 0
-
-    if op == "=":
-        boxes[box_number][label] = lens
-    elif op == "-":
-        if label in boxes[box_number]:
-            boxes[box_number].pop(label)
+    if "=" in step:
+        label, lens = step.split("=")
+        idx, lens = aoc_hash(label), int(lens)
+        boxes[idx][label] = lens
+    elif "-" in step:
+        label = step[:-1]
+        idx = aoc_hash(label)
+        if label in boxes[idx]:
+            boxes[idx].pop(label)
 
 ans2 = 0
 for box_number in range(256):
