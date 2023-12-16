@@ -11,42 +11,20 @@ def simulate(r, c, dr, dc):
     q = [(r, c, dr, dc)]
     while q:
         r, c, dr, dc = q.pop()
-        assert abs(dr) + abs(dc) == 1
         if not (0 <= r < R and 0 <= c < C) or (r, c, dr, dc) in seen:
             continue
-        seen |= {(r, c, dr, dc)}
         energised[r][c] = 1
-
-        if grid[r][c] == ".":
-            q += [(r + dr, c + dc, dr, dc)]
-        elif grid[r][c] == "\\":
-            if dc == 1:
-                q += [(r + 1, c, 1, 0)]
-            elif dc == -1:
-                q += [(r - 1, c, -1, 0)]
-            elif dr == 1:
-                q += [(r, c + 1, 0, 1)]
-            elif dr == -1:
-                q += [(r, c - 1, 0, -1)]
+        seen |= {(r, c, dr, dc)}
+        if grid[r][c] == "\\":
+            q += [(r + dc, c + dr, dc, dr)]
         elif grid[r][c] == "/":
-            if dc == 1:
-                q += [(r - 1, c, -1, 0)]
-            elif dc == -1:
-                q += [(r + 1, c, 1, 0)]
-            elif dr == 1:
-                q += [(r, c - 1, 0, -1)]
-            elif dr == -1:
-                q += [(r, c + 1, 0, 1)]
-        elif grid[r][c] == "-":
-            if dc != 0:
-                q += [(r + dr, c + dc, dr, dc)]
-            elif dr != 0:
-                q += [(r, c - 1, 0, -1), (r, c + 1, 0, 1)]
-        elif grid[r][c] == "|":
-            if dr != 0:
-                q += [(r + dr, c + dc, dr, dc)]
-            elif dc != 0:
-                q += [(r + 1, c, 1, 0), (r - 1, c, -1, 0)]
+            q += [(r - dc, c - dr, -dc, -dr)]
+        elif grid[r][c] == "-" and dr != 0:
+            q += [(r, c - 1, 0, -1), (r, c + 1, 0, 1)]
+        elif grid[r][c] == "|" and dc != 0:
+            q += [(r + 1, c, 1, 0), (r - 1, c, -1, 0)]
+        else:
+            q += [(r + dr, c + dc, dr, dc)]  # default
     return sum(sum(row) for row in energised)
 
 
