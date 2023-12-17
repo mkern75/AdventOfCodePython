@@ -16,6 +16,11 @@ def explore(min_steps_same_dir, max_steps_same_dir):
 
     while heap:
         heat_loss, r, c, dr, dc, steps = heapq.heappop(heap)
+
+        # destination reached
+        if (r, c) == (R - 1, C - 1) and steps >= min_steps_same_dir:
+            return heat_loss
+
         if heat_loss >= min_heat_loss[r, c, dr, dc, steps]:
             continue
         min_heat_loss[r, c, dr, dc, steps] = heat_loss
@@ -41,9 +46,6 @@ def explore(min_steps_same_dir, max_steps_same_dir):
             nheat_loss = heat_loss + grid[nr][nc]
             if nheat_loss < min_heat_loss[nr, nc, ndr, ndc, nsteps]:
                 heapq.heappush(heap, (nheat_loss, nr, nc, ndr, ndc, nsteps))
-
-    return min(heat_loss for (r, c, _, _, steps), heat_loss in min_heat_loss.items() if
-               r == R - 1 and c == C - 1 and steps >= min_steps_same_dir)
 
 
 ans1 = explore(0, 3)
