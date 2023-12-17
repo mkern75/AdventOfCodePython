@@ -1,5 +1,5 @@
 from collections import defaultdict
-import heapq
+from heapq import heapify, heappop, heappush
 
 INPUT_FILE = "./year2023/data/day17.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
@@ -12,10 +12,10 @@ def explore(min_steps_same_dir, max_steps_same_dir):
     min_heat_loss = defaultdict(lambda: 10 ** 20)
     # format: (heat_loss_so_far, row, column, direction_delta_row, direction_delta_column, steps_in_current_direction)
     heap = [(0, 0, 0, 0, 1, 0), (0, 0, 0, 1, 0, 0)]
-    heapq.heapify(heap)
+    heapify(heap)
 
     while heap:
-        heat_loss, r, c, dr, dc, steps = heapq.heappop(heap)
+        heat_loss, r, c, dr, dc, steps = heappop(heap)
 
         # destination reached
         if (r, c) == (R - 1, C - 1) and steps >= min_steps_same_dir:
@@ -43,9 +43,7 @@ def explore(min_steps_same_dir, max_steps_same_dir):
             if (ndr, ndc) != (dr, dc) and steps < min_steps_same_dir:
                 continue
 
-            nheat_loss = heat_loss + grid[nr][nc]
-            if nheat_loss < min_heat_loss[nr, nc, ndr, ndc, nsteps]:
-                heapq.heappush(heap, (nheat_loss, nr, nc, ndr, ndc, nsteps))
+            heappush(heap, (heat_loss + grid[nr][nc], nr, nc, ndr, ndc, nsteps))
 
 
 ans1 = explore(0, 3)
