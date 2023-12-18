@@ -13,13 +13,12 @@ def solve(instructions):
     row, col = 0, 0
     coordinate_set = {0, 1}
     for direction, distance in instructions:
-        nrow = row + DIR[direction][0] * distance
-        ncol = col + DIR[direction][1] * distance
-        polygon += [(row, col, nrow, ncol)]
-        row = nrow
-        col = ncol
+        row_next = row + distance * DIR[direction][0]
+        col_next = col + distance * DIR[direction][1]
+        polygon += [(row, col, row_next, col_next)]
+        row = row_next
+        col = col_next
         coordinate_set |= {row, row + 1, col, col + 1}
-    polygon += [(row, col, 0, 0)]
 
     # coordinate compression
     coordinates = sorted(coordinate_set)
@@ -33,7 +32,7 @@ def solve(instructions):
             for c in range(min(cc1, cc2), max(cc1, cc2) + 1):
                 plan[r, c] = "#"
 
-    # mark outside of polygon with "X"
+    # floodfill outside of polygon with "X"
     r_min, r_max = min(r for (r, _) in plan) - 1, max(r for (r, _) in plan) + 1
     c_min, c_max = min(c for (_, c) in plan) - 1, max(c for (_, c) in plan) + 1
     q = [(r_min, c_min)]  # definitely outside
