@@ -33,25 +33,22 @@ def solve(instructions):
             for c in range(min(cc1, cc2), max(cc1, cc2) + 1):
                 plan[r, c] = "#"
 
-    # fill polygon with # in plan
+    # mark outside of polygon with "X"
     r_min, r_max = min(r for (r, _) in plan) - 1, max(r for (r, _) in plan) + 1
     c_min, c_max = min(c for (_, c) in plan) - 1, max(c for (_, c) in plan) + 1
-    q = [(r_min, c_min)]  # first mark outside
+    q = [(r_min, c_min)]  # definiteky outside
     while q:
         r, c = q.pop()
         if r_min <= r <= r_max and c_min <= c <= c_max and plan[r, c] == ".":
-            plan[r, c] = "-"
+            plan[r, c] = "X"
             for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                 q += [(r + dr, c + dc)]
-    for r in range(r_min, r_max + 1):  # then fill inside
-        for c in range(c_min, c_max + 1):
-            plan[r, c] = "." if plan[r, c] == "-" else "#"
 
     # calculate result by reverting back to original coordinates
     res = 0
     for r in range(r_min, r_max + 1):
         for c in range(c_min, c_max + 1):
-            if plan[r, c] == "#":
+            if plan[r, c] != "X":  # not outside => inside
                 res += (coordinates[r + 1] - coordinates[r]) * (coordinates[c + 1] - coordinates[c])
     return res
 
