@@ -36,7 +36,7 @@ def solve(instructions):
     # mark outside of polygon with "X"
     r_min, r_max = min(r for (r, _) in plan) - 1, max(r for (r, _) in plan) + 1
     c_min, c_max = min(c for (_, c) in plan) - 1, max(c for (_, c) in plan) + 1
-    q = [(r_min, c_min)]  # definiteky outside
+    q = [(r_min, c_min)]  # definitely outside
     while q:
         r, c = q.pop()
         if r_min <= r <= r_max and c_min <= c <= c_max and plan[r, c] == ".":
