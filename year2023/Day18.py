@@ -11,7 +11,7 @@ def solve(instructions):
     # construct polygon
     polygon = []
     row, col = 0, 0
-    coordinate_set = {0}
+    coordinate_set = {0, 1}
     for direction, distance in instructions:
         nrow = row + DIR[direction][0] * distance
         ncol = col + DIR[direction][1] * distance
