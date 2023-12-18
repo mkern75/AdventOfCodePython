@@ -3,31 +3,30 @@ from collections import defaultdict
 INPUT_FILE = "./year2023/data/day18.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
-DIR = {"L": (0, -1), "R": (0, 1), "U": (-1, 0), "D": (1, 0),
-       "2": (0, -1), "0": (0, 1), "3": (-1, 0), "1": (1, 0)}
+MOVE = {"L": (0, -1), "R": (0, 1), "U": (-1, 0), "D": (1, 0),
+        "2": (0, -1), "0": (0, 1), "3": (-1, 0), "1": (1, 0)}
 
 
 def solve(instructions):
-    # construct polygon
-    polygon = []
-    row, col = 0, 0
-    coordinate_set = {0, 1}
+    # trench polygon: list of line segments (row1, col1, row2, col2)
+    row, col, polygon = 0, 0, []
+    row_coord, col_coord = {0, 1}, {0, 1}
     for direction, distance in instructions:
-        row_next = row + distance * DIR[direction][0]
-        col_next = col + distance * DIR[direction][1]
-        polygon += [(row, col, row_next, col_next)]
-        row = row_next
-        col = col_next
-        coordinate_set |= {row, row + 1, col, col + 1}
+        polygon += [(row, col, row + distance * MOVE[direction][0], col + distance * MOVE[direction][1])]
+        row, col = polygon[-1][2], polygon[-1][3]
+        row_coord |= {row, row + 1}
+        col_coord |= {col, col + 1}
 
     # coordinate compression
-    coordinates = sorted(coordinate_set)
-    idx_coord = {v: i for i, v in enumerate(coordinates)}
+    row_coord = sorted(row_coord)
+    row_idx = {v: i for i, v in enumerate(row_coord)}
+    col_coord = sorted(col_coord)
+    col_idx = {v: i for i, v in enumerate(col_coord)}
 
     # build plan with compressed coordinates
     plan = defaultdict(lambda: ".")
     for r1, c1, r2, c2 in polygon:
-        r1, c1, r2, c2 = idx_coord[r1], idx_coord[c1], idx_coord[r2], idx_coord[c2]
+        r1, c1, r2, c2 = row_idx[r1], col_idx[c1], row_idx[r2], col_idx[c2]
         for r in range(min(r1, r2), max(r1, r2) + 1):
             for c in range(min(c1, c2), max(c1, c2) + 1):
                 plan[r, c] = "#"
@@ -48,7 +47,7 @@ def solve(instructions):
     for r in range(r_min, r_max + 1):
         for c in range(c_min, c_max + 1):
             if plan[r, c] != "X":  # not outside => inside
-                res += (coordinates[r + 1] - coordinates[r]) * (coordinates[c + 1] - coordinates[c])
+                res += (row_coord[r + 1] - row_coord[r]) * (col_coord[c + 1] - col_coord[c])
     return res
 
 
