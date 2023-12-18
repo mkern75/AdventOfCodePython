@@ -27,14 +27,14 @@ def solve(instructions):
     # build plan with compressed coordinates
     plan = defaultdict(lambda: ".")
     for r1, c1, r2, c2 in polygon:
-        rr1, cc1, rr2, cc2 = idx_coord[r1], idx_coord[c1], idx_coord[r2], idx_coord[c2]
-        for r in range(min(rr1, rr2), max(rr1, rr2) + 1):
-            for c in range(min(cc1, cc2), max(cc1, cc2) + 1):
+        r1, c1, r2, c2 = idx_coord[r1], idx_coord[c1], idx_coord[r2], idx_coord[c2]
+        for r in range(min(r1, r2), max(r1, r2) + 1):
+            for c in range(min(c1, c2), max(c1, c2) + 1):
                 plan[r, c] = "#"
 
     # floodfill outside of polygon with "X"
-    r_min, r_max = min(r for (r, _) in plan) - 1, max(r for (r, _) in plan) + 1
-    c_min, c_max = min(c for (_, c) in plan) - 1, max(c for (_, c) in plan) + 1
+    r_min, r_max = min(r for r, _ in plan) - 1, max(r for r, _ in plan) + 1
+    c_min, c_max = min(c for _, c in plan) - 1, max(c for _, c in plan) + 1
     q = [(r_min, c_min)]  # definitely outside
     while q:
         r, c = q.pop()
