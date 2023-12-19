@@ -37,12 +37,14 @@ def count_accepted_combinations(x_min, x_max, m_min, m_max, a_min, a_max, s_min,
 
             elif rule == "A":
                 res += prod(mx - mn + 1 for mn, mx in var_vals.values())
+                break
 
             elif rule == "R":
-                res += 0
+                break
 
             elif rule in workflows:
                 q += [(rule, deepcopy(var_vals))]
+                break
 
             elif len(rule) == 4:
                 var, comp, threshold, workflow_name_next = rule
