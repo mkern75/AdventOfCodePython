@@ -1,5 +1,5 @@
 from collections import deque, defaultdict, Counter
-from math import prod
+from math import lcm
 
 INPUT_FILE = "./year2023/data/day20.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
@@ -115,5 +115,5 @@ while len(first_low_cycle_inverters) < len(inverters):
     for inverter_id in inverters:
         if inverter_id not in first_low_cycle_inverters and (inverter_id, LOW_PULSE) in observations:
             first_low_cycle_inverters[inverter_id] = cycle
-ans2 = prod(first_low_cycle_inverters.values())
+ans2 = lcm(*first_low_cycle_inverters.values())
 print(f"part 2: {ans2}")

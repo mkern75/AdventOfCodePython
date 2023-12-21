@@ -1,5 +1,5 @@
 from collections import deque, defaultdict
-from math import prod
+from math import lcm
 
 INPUT_FILE = "./year2023/data/day20.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
@@ -86,5 +86,5 @@ cycle = 0
 while len(inverter_first_low_cycle) < len(inverters):
     cycle += 1
     _, _ = press_button(cycle)
-ans2 = prod(inverter_first_low_cycle.values())
+ans2 = lcm(*inverter_first_low_cycle.values())
 print(f"part 2: {ans2}")
