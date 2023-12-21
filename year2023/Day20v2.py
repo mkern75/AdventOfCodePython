@@ -61,31 +61,31 @@ def press_button(modules_to_observe=()):
     while q:
         source, pulse, target = q.popleft()
 
+        # for part 1
         cnt[pulse] += 1
 
+        # for part 2
         if target in modules_to_observe:
             observations |= {(target, pulse)}
 
         if target not in modules:
             continue
+
         module = modules[target]
+        pulse_next = pulse
 
-        if module.type == "-":
-            for target_next in module.outputs:
-                q.append((target, pulse, target_next))
-
-        elif module.type == "%":
+        if module.type == "%":
             if pulse == LOW_PULSE:
                 module.flip_state()
                 pulse_next = HIGH_PULSE if module.state == ON else LOW_PULSE
-                for target_next in module.outputs:
-                    q.append((target, pulse_next, target_next))
-
+            elif pulse == HIGH_PULSE:
+                continue
         elif module.type == "&":
             module.update_input_value(source, pulse)
             pulse_next = LOW_PULSE if module.all_inputs_high() else HIGH_PULSE
-            for target_next in module.outputs:
-                q.append((target, pulse_next, target_next))
+
+        for target_next in module.outputs:
+            q.append((target, pulse_next, target_next))
 
     return cnt, observations
 
@@ -99,11 +99,11 @@ ans1 = cnt[LOW_PULSE] * cnt[HIGH_PULSE]
 print(f"part 1: {ans1}")
 
 # part 2
-# - manual analysis of the modules and their connections shows that we have to monitor 4 inverters
+# - manual analysis of the modules and their connections shows that we really only have to monitor 4 inverters
 # - these 4 inverters feed into the final conjunction module which produces the output rx
-# - each of the inverters has a certain period when their input is LOW and thus their output is HIGH
+# - each of the inverters has a certain period when their input is LOW and thus their output turns HIGH
 # - 4 HIGH inputs into the final conjunction module produce the desired LOW output for rx
-# - find the 4 periods separately and then calculate their lcm
+# - thus find the periods of the 4 inverters separately and then calculate their lcm
 for module in modules.values():
     module.reset()
 inverters = [mid for mid, module in modules.items() if module.is_inverter()]
