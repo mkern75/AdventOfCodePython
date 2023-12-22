@@ -22,21 +22,20 @@ def bottom(b):
     return min(b[0][2], b[1][2])
 
 
-idx = sorted(range(N), key=lambda i: bottom(bricks[i]))  # brick indices sorted by bottom z coordinate
+bricks.sort(key=lambda b: bottom(b))
 rests_on = [[] for _ in range(N)]
 
 for i in range(N):
-    ii = idx[i]
-    overlaps = {idx[j] for j in range(i) if do_overlap(bricks[ii], bricks[idx[j]])}
-    if overlaps:
-        top_max = max(top(bricks[k]) for k in overlaps)
-        rests_on[ii] += [k for k in overlaps if top(bricks[k]) == top_max]
-        fall = bottom(bricks[ii]) - (top_max + 1)
+    overlaps_below = {j for j in range(i) if do_overlap(bricks[i], bricks[j])}
+    if overlaps_below:
+        top_max = max(top(bricks[k]) for k in overlaps_below)
+        rests_on[i] += [k for k in overlaps_below if top(bricks[k]) == top_max]
+        fall = bottom(bricks[i]) - (top_max + 1)
     else:
-        rests_on[ii] += [GROUND]
-        fall = bottom(bricks[ii]) - 1
-    bricks[ii][0][2] -= fall
-    bricks[ii][1][2] -= fall
+        rests_on[i] += [GROUND]
+        fall = bottom(bricks[i]) - 1
+    bricks[i][0][2] -= fall
+    bricks[i][1][2] -= fall
 
 can_be_disintegrated = [True] * N
 for i in range(N):
@@ -47,12 +46,10 @@ print(f"part 1: {ans1}")
 
 ans2 = 0
 for i in range(N):
-    ii = idx[i]
-    if not can_be_disintegrated[ii]:
-        gone = {ii}
+    if not can_be_disintegrated[i]:
+        gone = {i}
         for j in range(i + 1, N):
-            jj = idx[j]
-            if all(k in gone for k in rests_on[jj]):
-                gone |= {jj}
+            if set(rests_on[j]).issubset(gone):
+                gone |= {j}
         ans2 += len(gone) - 1
 print(f"part 2: {ans2}")
