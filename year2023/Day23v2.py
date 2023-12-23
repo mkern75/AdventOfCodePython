@@ -9,12 +9,12 @@ R, C = len(grid), len(grid[0])
 MOVES1 = {".": [(1, 0), (-1, 0), (0, 1), (0, -1)], ">": [(0, 1)], "<": [(0, -1)], "^": [(-1, 0)], "v": [(1, 0)]}
 MOVES2 = {c: MOVES1["."] for c in ".<>^v"}
 
-# start and end coordinates
-r_start, c_start = 0, next(c for c in range(C) if grid[0][c] == ".")
-r_end, c_end = R - 1, next(c for c in range(C) if grid[R - 1][c] == ".")
+# start and end grid coordinates
+start = (0, next(c for c in range(C) if grid[0][c] == "."))
+end = (R - 1, next(c for c in range(C) if grid[R - 1][c] == "."))
 
-#  points-of-interest: only consider grid positions / junctions with an actual choice, plus start and end
-poi = [(r_start, c_start), (r_end, c_end)]
+#  points-of-interest: only consider grid coordinates with an actual choice, i.e. junctions, plus start and end
+poi = [start, end]
 for r in range(R):
     for c in range(C):
         if grid[r][c] != "#":
@@ -23,8 +23,8 @@ for r in range(R):
                 poi += [(r, c)]
 N = len(poi)
 idx = {p: i for i, p in enumerate(poi)}
-start = idx[0, next(c for c in range(C) if grid[0][c] == ".")]
-end = idx[R - 1, next(c for c in range(C) if grid[R - 1][c] == ".")]
+start_idx = idx[start]
+end_idx = idx[end]
 
 
 def build_adjacency_list(moves):
@@ -48,10 +48,10 @@ def build_adjacency_list(moves):
 
 def find_longest_path(adj):
     res = 0
-    q = [(start, 0, 1 << start)]
+    q = [(start_idx, 0, 1 << start_idx)]
     while q:
         v, dist_so_far, visited = q.pop()
-        if v == end:
+        if v == end_idx:
             res = max(res, dist_so_far)
         else:
             for vn, dist_to_vn in adj[v]:
