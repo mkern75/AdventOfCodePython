@@ -1,3 +1,4 @@
+from typing import Optional
 from math import isclose
 
 INPUT_FILE = "./year2023/data/day24.txt"
@@ -8,6 +9,8 @@ PX, PY, PZ, VX, VY, VZ = 0, 1, 2, 3, 4, 5
 hailstones = [tuple(map(int, line.replace("@", ",").split(","))) for line in data]
 H = len(hailstones)
 
+
+# part 1
 
 # https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
 def calc_xy_intersection(hailstone1, hailstone2):
@@ -21,7 +24,6 @@ def calc_xy_intersection(hailstone1, hailstone2):
     return None if d == 0 else (px / d, py / d)
 
 
-# part 1
 ans1 = 0
 test_area_min, test_area_max = 200000000000000, 400000000000000
 for i in range(H - 1):
@@ -36,40 +38,47 @@ print(f"part 1: {ans1}")
 
 
 # part 2
-def gauss_elimination(m):
-    N = len(m)
-    assert len(m[0]) == N + 1
 
-    x = [0] * N
+# solves Ax = b
+def gauss_elimination(a: list[list[float]], b: list[float]) -> Optional[list[float]]:
+    N = len(b)
+    assert len(a) == N
+    assert all(len(row) == N for row in a)
+
+    # solution vector
+    x = [0.0] * N
+
     for i in range(N):
         # find pivot element (row)
         pivot = i
         for j in range(i + 1, N):
-            if abs(m[j][i]) > abs(m[pivot][i]):
+            if abs(a[j][i]) > abs(a[pivot][i]):
                 pivot = j
         # check if value in pivot row is zero
-        if m[pivot][i] == 0:
+        if a[pivot][i] == 0:
             return None
         # swap current and pivot row
         if pivot != i:
-            m[i], m[pivot] = m[pivot], m[i]
+            a[i], a[pivot], b[i], b[pivot] = a[pivot], a[i], b[pivot], b[i]
         # ensure element in main diagonal is 1
-        factor = 1.0 / m[i][i]
-        for j in range(i, N + 1):
-            m[i][j] *= factor
+        factor = 1.0 / a[i][i]
+        for j in range(i, N):
+            a[i][j] *= factor
+        b[i] *= factor
         # forward elimination
         for j in range(i + 1, N):
-            factor = - m[j][i] / m[i][i]
-            for k in range(i + 1, N + 1):
-                m[j][k] += factor * m[i][k]
-            m[j][i] = 0.0
+            factor = - a[j][i] / a[i][i]
+            for k in range(i + 1, N):
+                a[j][k] += factor * a[i][k]
+            b[j] += factor * b[i]
+            a[j][i] = 0
     # backward substituion
     for i in range(N - 1, -1, -1):
         for j in range(i):
-            factor = -m[j][i]
-            m[j][i] += factor * m[i][i]
-            m[j][N] += factor * m[i][N]
-        x[i] = m[i][N]
+            factor = -a[j][i]
+            a[j][i] += factor * a[i][i]
+            b[j] += factor * b[i]
+        x[i] = b[i]
     return x
 
 
@@ -78,21 +87,22 @@ def gauss_elimination(m):
 def solve_partial(hailstone1, hailstone2, vx_fixed, vy_fixed):
     x1, y1, z1, vx1, vy1, vz1 = hailstone1
     x2, y2, z2, vx2, vy2, vz2 = hailstone2
-    m = [[0] * 5 for _ in range(4)]
-    m[0][0] = 1
-    m[0][2] = vx_fixed - vx1
-    m[0][4] = x1
-    m[1][0] = 1
-    m[1][3] = vx_fixed - vx2
-    m[1][4] = x2
-    m[2][1] = 1
-    m[2][2] = vy_fixed - vy1
-    m[2][4] = y1
-    m[3][1] = 1
-    m[3][3] = vy_fixed - vy2
-    m[3][4] = y2
+    a = [[0] * 4 for _ in range(4)]
+    b = [0] * 4
+    a[0][0] = 1
+    a[0][2] = vx_fixed - vx1
+    b[0] = x1
+    a[1][0] = 1
+    a[1][3] = vx_fixed - vx2
+    b[1] = x2
+    a[2][1] = 1
+    a[2][2] = vy_fixed - vy1
+    b[2] = y1
+    a[3][1] = 1
+    a[3][3] = vy_fixed - vy2
+    b[3] = y2
 
-    x = gauss_elimination(m)
+    x = gauss_elimination(a, b)
     if x is None:
         return None
     x, y, t1, t2 = x
