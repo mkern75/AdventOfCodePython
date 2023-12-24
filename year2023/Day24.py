@@ -117,12 +117,12 @@ def check_all(hailstones, rock):
     return True
 
 
-test_area_min, test_area_max = -500, 500  # this is a simplifying assumption but it works
-for vx_fixed in range(test_area_min, test_area_max + 1):
-    for vy_fixed in range(test_area_min, test_area_max + 1):
+v_min, v_max = -500, 500  # this is a simplifying assumption but it works
+for vx_fixed in range(v_min, v_max + 1):
+    for vy_fixed in range(v_min, v_max + 1):
         rock = solve_partial(hailstones[0], hailstones[1], vx_fixed, vy_fixed)
         if rock is not None:
-            if all(isclose(f, round(f)) for f in rock):
+            if all(isclose(f, round(f)) for f in rock):  # further assumption: integer solution
                 rock = tuple(round(f) for f in rock)
                 if check_all(hailstones, rock):
                     ans2 = round(rock[0]) + round(rock[1]) + round(rock[2])
