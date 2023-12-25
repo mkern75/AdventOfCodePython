@@ -11,6 +11,9 @@ for line in data:
         graph.add_edge(other_component, component, capacity=1.0)
 
 nodes = list(graph.nodes)
-cnt = 1 + sum(1 for node2 in nodes[1:] if nx.minimum_cut_value(graph, nodes[0], node2) > 3)
-ans1 = cnt * (graph.number_of_nodes() - cnt)
-print(f"part 1: {ans1}")
+for node2 in nodes[1:]:
+    cut_value, partition = nx.minimum_cut(graph, nodes[0], node2)
+    if cut_value == 3:
+        ans1 = len(partition[0]) * len(partition[1])
+        print(f"part 1: {ans1}")
+        break
