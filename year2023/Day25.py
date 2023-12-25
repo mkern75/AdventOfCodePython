@@ -3,11 +3,10 @@ import networkx as nx
 INPUT_FILE = "./year2023/data/day25.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
-graph = nx.DiGraph()
+graph = nx.Graph()
 for line in data:
     component, connections = line.split(": ")
     for other_component in connections.split():
-        graph.add_edge(component, other_component, capacity=1.0)
         graph.add_edge(other_component, component, capacity=1.0)
 
 nodes = list(graph.nodes)
