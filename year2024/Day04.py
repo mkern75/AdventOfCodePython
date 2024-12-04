@@ -4,12 +4,8 @@ from collections import defaultdict
 time_start = time()
 INPUT_FILE = "./year2024/data/day04.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
-
+g = defaultdict(lambda: ".", {(r, c): v for r, row in enumerate(data) for c, v in enumerate(row)})
 R, C = len(data), len(data[0])
-g = defaultdict(lambda: ".")
-for r in range(R):
-    for c in range(C):
-        g[r, c] = data[r][c]
 
 ans1, ans2 = 0, 0
 for r in range(R):
