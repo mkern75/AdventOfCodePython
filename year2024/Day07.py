@@ -5,7 +5,7 @@ INPUT_FILE = "./year2024/data/day07.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
 
-def is_valid(result, numbers, part2=False):
+def is_valid_original(result, numbers, part2=False):
     n = len(numbers)
     st = [(numbers[0], 1)]
     while st:
@@ -21,6 +21,26 @@ def is_valid(result, numbers, part2=False):
         st.append((r * numbers[i], i + 1))
         if part2:
             st.append((int(str(r) + str(numbers[i])), i + 1))
+    return False
+
+
+def is_valid(result, numbers, part2=False):
+    st = [(result, len(numbers))]
+    while st:
+        r, i = st.pop()
+        if i == 1:
+            if r == numbers[0]:
+                return True
+            continue
+        i -= 1
+        if r >= numbers[i]:
+            st.append((r - numbers[i], i))
+        if r % numbers[i] == 0:
+            st.append((r // numbers[i], i))
+        if part2 and r > numbers[i]:
+            rs, ns = str(r), str(numbers[i])
+            if rs.endswith(ns):
+                st.append((int(rs[:-len(ns)]), i))
     return False
 
 
