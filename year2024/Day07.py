@@ -10,14 +10,17 @@ def is_valid(result, numbers, part2=False):
     st = [(numbers[0], 1)]
     while st:
         r, i = st.pop()
+        # all numbers are positive and thus the available operators cannot decrease the result
+        if r > result:
+            continue
         if i == n:
             if r == result:
                 return True
-        else:
-            st.append((r + numbers[i], i + 1))
-            st.append((r * numbers[i], i + 1))
-            if part2:
-                st.append((int(str(r) + str(numbers[i])), i + 1))
+            continue
+        st.append((r + numbers[i], i + 1))
+        st.append((r * numbers[i], i + 1))
+        if part2:
+            st.append((int(str(r) + str(numbers[i])), i + 1))
     return False
 
 
