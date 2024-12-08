@@ -6,13 +6,17 @@ data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 grid = [list(line.rstrip("\n")) for line in open(INPUT_FILE, "r")]
 R, C = len(grid), len(grid[0])
 
+DIR = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+
 r_start, c_start = next((r, c) for r in range(R) for c in range(C) if grid[r][c] == "^")
 
-r, c, dr, dc = r_start, c_start, -1, 0
+r, c, dir = r_start, c_start, 0
+dr, dc = DIR[dir]
 seen_p1 = {(r_start, c_start)}
 while True:
     while 0 <= r + dr < R and 0 <= c + dc < C and grid[r + dr][c + dc] == "#":
-        dr, dc = dc, -dr
+        dir = 0 if dir == len(DIR) - 1 else dir + 1
+        dr, dc = DIR[dir]
     r, c = r + dr, c + dc
     if r < 0 or R <= r or c < 0 or C <= c:
         break
@@ -22,26 +26,31 @@ ans1 = len(seen_p1)
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
 
-def check_loop_p2():
-    r, c, dr, dc = r_start, c_start, -1, 0
-    seen = {hash((r_start, c_start, dr, dc))}
+def check_loop_p2(cycle, seen):
+    r, c, dir = r_start, c_start, 0
+    dr, dc = DIR[dir]
     while True:
         while 0 <= r + dr < R and 0 <= c + dc < C and grid[r + dr][c + dc] == "#":
-            dr, dc = dc, -dr
+            dir = 0 if dir == len(DIR) - 1 else dir + 1
+            dr, dc = DIR[dir]
         r, c = r + dr, c + dc
         if r < 0 or R <= r or c < 0 or C <= c:
             return 0
-        h = hash((r, c, dr, dc))
-        if h in seen:
+        if seen[r][c][dir] == cycle:
             return 1
-        seen.add(h)
+        seen[r][c][dir] = cycle
 
 
 ans2 = 0
+seen = [[[0] * len(DIR) for _ in range(C)] for _ in range(R)]
+cycle = 0
 for r_obstr, c_obstr in seen_p1:
     if r_obstr == r_start and c_obstr == c_start:
         continue
+    cycle += 1
     grid[r_obstr][c_obstr] = "#"
-    ans2 += check_loop_p2()
+    ans2 += check_loop_p2(cycle, seen)
     grid[r_obstr][c_obstr] = "."
 print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
+
+
