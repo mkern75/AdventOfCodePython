@@ -31,7 +31,7 @@ for i, x in enumerate(disk_map):
 max_id = max(f[0] for f in disk)
 
 idx_file = len(disk) - 1
-for id in range(max_id, 1, -1):
+for id in range(max_id, -1, -1):
     idx_file = next(i for i in range(idx_file, -1, -1) if disk[i][0] == id)
     sz = disk[idx_file][1]
     k = next((i for i in range(0, idx_file) if disk[i][0] == EMPTY and disk[i][1] >= sz), None)
