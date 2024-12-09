@@ -4,7 +4,6 @@ from heapq import heappop, heappush
 EMPTY = -1
 
 time_start = time()
-# INPUT_FILE = "./year2024/data/day09test.txt"
 INPUT_FILE = "./year2024/data/day09.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
