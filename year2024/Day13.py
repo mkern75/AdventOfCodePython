@@ -1,4 +1,5 @@
 from time import time
+import re
 
 time_start = time()
 INPUT_FILE = "./year2024/data/day13.txt"
@@ -23,8 +24,8 @@ def solve(a, b, c):
     return tuple()
 
 
-def nums(input_line):
-    return list(map(lambda s: int(s[2:]), input_line.split(": ")[1].split(", ")))
+def nums(line):
+    return list(map(int, re.findall(r"[-+]?\d+", line)))
 
 
 ans1, ans2 = 0, 0
