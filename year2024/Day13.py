@@ -6,38 +6,39 @@ data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 blocks = [block.splitlines() for block in open(INPUT_FILE, "r").read().split("\n\n")]
 
 
-# Find non-nengative integers a, b such that
-#   a * x[0] + b * x[1] = x[2]
-#   a * y[0] + b * y[1] = y[2]
-def solve(x, y):
-    cc = x[2] * y[0] - y[2] * x[0]
-    bb = x[1] * y[0] - y[1] * x[0]
+# Find non-nengative integers x, y such that:
+#   x * a[0] + y * b[0] = c[0]
+#   x * a[1] + y * b[1] = c[1]
+def solve(a, b, c):
+    cc = c[0] * a[1] - c[1] * a[0]
+    bb = b[0] * a[1] - b[1] * a[0]
     if cc % bb != 0:
         return tuple()
-    b = cc // bb
-    if (x[2] - b * x[1]) % x[0] != 0:
+    y = cc // bb
+    if (c[0] - y * b[0]) % a[0] != 0:
         return tuple()
-    a = (x[2] - b * x[1]) // x[0]
-    if a >= 0 and b >= 0:
-        return a, b
+    x = (c[0] - y * b[0]) // a[0]
+    if x >= 0 and y >= 0:
+        return x, y
     return tuple()
+
+
+def nums(input_line):
+    return list(map(lambda s: int(s[2:]), input_line.split(": ")[1].split(", ")))
 
 
 ans1, ans2 = 0, 0
 for block in blocks:
-    x, y = [0] * 3, [0] * 3
-    for i in range(3):
-        _, right = block[i].split(": ")
-        xs, ys = right.split(", ")
-        x[i], y[i] = int(xs[2:]), int(ys[2:])
+    a = nums(block[0])
+    b = nums(block[1])
+    c = nums(block[2])
 
-    res = solve(x, y)
+    res = solve(a, b, c)
     if res:
         ans1 += 3 * res[0] + res[1]
 
-    x[2] += 10000000000000
-    y[2] += 10000000000000
-    res = solve(x, y)
+    c = [v + 10000000000000 for v in c]
+    res = solve(a, b, c)
     if res:
         ans2 += 3 * res[0] + res[1]
 
