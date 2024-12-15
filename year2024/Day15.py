@@ -97,13 +97,9 @@ def move_vertically(dr):
         if not additional_boxes:
             break
 
-    move_possible = True
     for r, c in boxes:
         if (r + dr, c) not in boxes and grid[r + dr][c] != ".":
-            move_possible = False
-
-    if not move_possible:
-        return
+            return
 
     boxes = sorted(boxes, reverse=(dr == 1))
     for r, c in boxes:
