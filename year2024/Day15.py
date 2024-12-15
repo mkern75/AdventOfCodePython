@@ -7,6 +7,9 @@ blocks = [block.splitlines() for block in open(INPUT_FILE, "r").read().split("\n
 
 
 class Warehouse:
+    MOVES = {"<": (0, -1), ">": (0, 1), "^": (-1, 0), "v": (1, 0)}
+    WALL, FREE, ROBOT, BOX, BOX_LEFT, BOX_RIGHT = "#", ".", "@", "O", "[", "]"
+
     def __init__(self, data):
         self._grid = [list(line.rstrip("\n")) for line in data]  # type: list[list[str]]
         self._n_rows = len(self._grid)
@@ -15,7 +18,7 @@ class Warehouse:
         self._c_robot = -1
         for r in range(self._n_rows):
             for c in range(self._n_cols):
-                if self._grid[r][c] == "@":
+                if self._grid[r][c] == Warehouse.ROBOT:
                     self._r_robot, self._c_robot = r, c
 
     def display(self, info=None):
@@ -29,23 +32,23 @@ class Warehouse:
         res = 0
         for r in range(self._n_rows):
             for c in range(self._n_cols):
-                if self._grid[r][c] in "O[":
+                if self._grid[r][c] in [Warehouse.BOX, Warehouse.BOX_LEFT]:
                     res += 100 * r + c
         return res
 
     def scale_up(self):
-        g = [["."] * (2 * self._n_cols) for _ in range(self._n_rows)]
+        g = [[Warehouse.FREE] * (2 * self._n_cols) for _ in range(self._n_rows)]
         for r in range(self._n_rows):
             for c in range(self._n_cols):
-                if self._grid[r][c] in "#.":
+                if self._grid[r][c] in [Warehouse.WALL, Warehouse.FREE]:
                     g[r][2 * c] = self._grid[r][c]
                     g[r][2 * c + 1] = self._grid[r][c]
-                elif self._grid[r][c] == "O":
-                    g[r][2 * c] = "["
-                    g[r][2 * c + 1] = "]"
-                elif self._grid[r][c] == "@":
-                    g[r][2 * c] = "@"
-                    g[r][2 * c + 1] = "."
+                elif self._grid[r][c] == Warehouse.BOX:
+                    g[r][2 * c] = Warehouse.BOX_LEFT
+                    g[r][2 * c + 1] = Warehouse.BOX_RIGHT
+                elif self._grid[r][c] == Warehouse.ROBOT:
+                    g[r][2 * c] = Warehouse.ROBOT
+                    g[r][2 * c + 1] = Warehouse.FREE
         self._grid = g
         self._n_cols *= 2
         self._c_robot *= 2
@@ -59,72 +62,30 @@ class Warehouse:
                 self.display(f"move {i}: {move}")
 
     def _execute_move(self, move):
-        if move == "<":
-            self._move_horizontally(-1)
-        elif move == ">":
-            self._move_horizontally(+1)
-        elif move == "^":
-            self._move_vertically(-1)
-        elif move == "v":
-            self._move_vertically(+1)
-
-    def _move_horizontally(self, dc):
-        if self._grid[self._r_robot][self._c_robot + dc] == "#":
-            return
-
-        if self._grid[self._r_robot][self._c_robot + dc] == ".":
-            self._grid[self._r_robot][self._c_robot] = "."
-            self._c_robot += dc
-            self._grid[self._r_robot][self._c_robot] = "@"
-            return
-
-        cc = self._c_robot + dc
-        while self._grid[self._r_robot][cc] in "O[]":
-            cc += dc
-
-        if self._grid[self._r_robot][cc] != ".":
-            return
-
-        for c in range(cc, self._c_robot - dc, -dc):
-            self._grid[self._r_robot][c] = self._grid[self._r_robot][c - dc]
-        self._grid[self._r_robot][self._c_robot] = "."
-        self._c_robot += dc
-
-    def _move_vertically(self, dr):
-        if self._grid[self._r_robot + dr][self._c_robot] == "#":
-            return
-
-        if self._grid[self._r_robot + dr][self._c_robot] == ".":
-            self._grid[self._r_robot][self._c_robot] = "."
-            self._r_robot += dr
-            self._grid[self._r_robot][self._c_robot] = "@"
-            return
+        dr, dc = Warehouse.MOVES[move]
 
         to_move = {(self._r_robot, self._c_robot)}
         while True:
             more_to_move = set()
             for r, c in to_move:
-                if self._grid[r + dr][c] in "O[]" and (r + dr, c) not in to_move:
-                    if self._grid[r + dr][c] == "O":
-                        more_to_move.add((r + dr, c))
-                    elif self._grid[r + dr][c] == "[":
-                        more_to_move.add((r + dr, c))
-                        more_to_move.add((r + dr, c + 1))
-                    elif self._grid[r + dr][c] == "]":
-                        more_to_move.add((r + dr, c - 1))
-                        more_to_move.add((r + dr, c))
-            to_move.update(more_to_move)
+                if (r + dr, c + dc) not in to_move:
+                    if self._grid[r + dr][c + dc] in [Warehouse.BOX, Warehouse.BOX_LEFT, Warehouse.BOX_RIGHT]:
+                        more_to_move.add((r + dr, c + dc))
+                        if self._grid[r + dr][c + dc] == Warehouse.BOX_LEFT:
+                            more_to_move.add((r + dr, c + dc + 1))
+                        if self._grid[r + dr][c + dc] == Warehouse.BOX_RIGHT:
+                            more_to_move.add((r + dr, c + dc - 1))
+                    elif self._grid[r + dr][c + dc] == Warehouse.WALL:
+                        return
             if not more_to_move:
                 break
+            to_move.update(more_to_move)
 
-        for r, c in to_move:
-            if (r + dr, c) not in to_move and self._grid[r + dr][c] != ".":
-                return
-
-        for r, c in sorted(to_move, reverse=(dr == 1)):
-            self._grid[r + dr][c] = self._grid[r][c]
-            self._grid[r][c] = "."
+        for r, c in sorted(to_move, reverse=((dr + dc) == 1)):
+            self._grid[r + dr][c + dc] = self._grid[r][c]
+            self._grid[r][c] = Warehouse.FREE
         self._r_robot += dr
+        self._c_robot += dc
 
 
 moves = "".join(blocks[1])
