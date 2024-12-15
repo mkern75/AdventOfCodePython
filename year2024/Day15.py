@@ -63,14 +63,10 @@ class Warehouse:
 
 
 moves = "".join(blocks[1])
-warehouse = Warehouse(blocks[0])
-warehouse.execute_moves(moves)
-ans1 = warehouse.sum_gps()
-print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
-
-moves = "".join(blocks[1])
-warehouse = Warehouse(blocks[0])
-warehouse.scale_up()
-warehouse.execute_moves(moves)
-ans2 = warehouse.sum_gps()
-print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
+for part in [1, 2]:
+    warehouse = Warehouse(blocks[0])
+    if part == 2:
+        warehouse.scale_up()
+    warehouse.execute_moves(moves)
+    ans = warehouse.sum_gps()
+    print(f"part {part}: {ans}  ({time() - time_start:.3f}s)")
