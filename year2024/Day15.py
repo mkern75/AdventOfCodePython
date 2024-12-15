@@ -28,7 +28,7 @@ class Warehouse:
             print("".join(self._grid[r]))
         print()
 
-    def gps(self):
+    def sum_gps(self):
         res = 0
         for r in range(self._n_rows):
             for c in range(self._n_cols):
@@ -64,24 +64,19 @@ class Warehouse:
     def _execute_move(self, move):
         dr, dc = Warehouse.MOVES[move]
 
-        to_move = {(self._r_robot, self._c_robot)}
-        while True:
-            more_to_move = set()
-            for r, c in to_move:
-                if (r + dr, c + dc) not in to_move:
-                    if self._grid[r + dr][c + dc] in [Warehouse.BOX, Warehouse.BOX_LEFT, Warehouse.BOX_RIGHT]:
-                        more_to_move.add((r + dr, c + dc))
-                        if self._grid[r + dr][c + dc] == Warehouse.BOX_LEFT:
-                            more_to_move.add((r + dr, c + dc + 1))
-                        if self._grid[r + dr][c + dc] == Warehouse.BOX_RIGHT:
-                            more_to_move.add((r + dr, c + dc - 1))
-                    elif self._grid[r + dr][c + dc] == Warehouse.WALL:
-                        return
-            if not more_to_move:
-                break
-            to_move.update(more_to_move)
+        to_move = [(self._r_robot, self._c_robot)]
+        for r, c in to_move:
+            if (r + dr, c + dc) not in to_move:
+                if self._grid[r + dr][c + dc] == Warehouse.WALL:
+                    return
+                if self._grid[r + dr][c + dc] in [Warehouse.BOX, Warehouse.BOX_LEFT, Warehouse.BOX_RIGHT]:
+                    to_move.append((r + dr, c + dc))
+                    if self._grid[r + dr][c + dc] == Warehouse.BOX_LEFT:
+                        to_move.append((r + dr, c + dc + 1))
+                    if self._grid[r + dr][c + dc] == Warehouse.BOX_RIGHT:
+                        to_move.append((r + dr, c + dc - 1))
 
-        for r, c in sorted(to_move, reverse=((dr + dc) == 1)):
+        for r, c in reversed(to_move):
             self._grid[r + dr][c + dc] = self._grid[r][c]
             self._grid[r][c] = Warehouse.FREE
         self._r_robot += dr
@@ -91,12 +86,12 @@ class Warehouse:
 moves = "".join(blocks[1])
 warehouse = Warehouse(blocks[0])
 warehouse.execute_moves(moves)
-ans1 = warehouse.gps()
+ans1 = warehouse.sum_gps()
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
 moves = "".join(blocks[1])
 warehouse = Warehouse(blocks[0])
 warehouse.scale_up()
 warehouse.execute_moves(moves)
-ans2 = warehouse.gps()
+ans2 = warehouse.sum_gps()
 print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
