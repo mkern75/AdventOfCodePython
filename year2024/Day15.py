@@ -71,45 +71,26 @@ def move_vertically(dr):
         r_robot += dr
         return
 
-    rr = r_robot + dr
-    while grid[rr][c_robot] in "O[]":
-        rr += dr
-
-    if grid[rr][c_robot] != ".":
-        return
-
-    for r in range(rr, r_robot, -dr):
-        grid[r][c_robot] = grid[r - dr][c_robot]
-    grid[r_robot + dr][c_robot] = "."
-    r_robot += dr
-
-
-def move_vertically_part2(dr):
-    global grid, r_robot, c_robot
-
-    if grid[r_robot + dr][c_robot] == "#":
-        return
-
-    if grid[r_robot + dr][c_robot] == ".":
-        r_robot += dr
-        return
-
     boxes = set()
-    if grid[r_robot + dr][c_robot] == "[":
+    if grid[r_robot + dr][c_robot] == "O":
+        boxes.add((r_robot + dr, c_robot))
+    elif grid[r_robot + dr][c_robot] == "[":
         boxes.add((r_robot + dr, c_robot))
         boxes.add((r_robot + dr, c_robot + 1))
-    if grid[r_robot + dr][c_robot] == "]":
+    elif grid[r_robot + dr][c_robot] == "]":
         boxes.add((r_robot + dr, c_robot - 1))
         boxes.add((r_robot + dr, c_robot))
 
     while True:
         additional_boxes = set()
         for r, c in boxes:
-            if grid[r + dr][c] in "[]" and (r + dr, c) not in boxes:
-                if grid[r + dr][c] == "[":
+            if grid[r + dr][c] in "O[]" and (r + dr, c) not in boxes:
+                if grid[r + dr][c] == "O":
+                    additional_boxes.add((r + dr, c))
+                elif grid[r + dr][c] == "[":
                     additional_boxes.add((r + dr, c))
                     additional_boxes.add((r + dr, c + 1))
-                if grid[r + dr][c] == "]":
+                elif grid[r + dr][c] == "]":
                     additional_boxes.add((r + dr, c - 1))
                     additional_boxes.add((r + dr, c))
         boxes.update(additional_boxes)
@@ -128,7 +109,6 @@ def move_vertically_part2(dr):
     for r, c in boxes:
         grid[r + dr][c] = grid[r][c]
         grid[r][c] = "."
-        display_grid(f"{r}/{c}")
     r_robot += dr
 
 
@@ -174,9 +154,9 @@ scale_up_grid()
 display_grid("start")
 for i, m in enumerate(moves, start=1):
     if m == "^":
-        move_vertically_part2(-1)
+        move_vertically(-1)
     elif m == "v":
-        move_vertically_part2(+1)
+        move_vertically(+1)
     elif m == "<":
         move_horizontally(-1)
     elif m == ">":
