@@ -55,10 +55,10 @@ seen = {(r_end, c_end, 1, 0), (r_end, c_end, 0, 1), (r_end, c_end, -1, 0), (r_en
 q = [(r_end, c_end, 1, 0), (r_end, c_end, 0, 1), (r_end, c_end, -1, 0), (r_end, c_end, 0, -1)]
 while q:
     r, c, dr, dc = q.pop()
-    for (rr, cc, drr, dcc) in prev[r, c, dr, dc]:
-        if (rr, cc, drr, dcc) not in seen:
-            seen.add((rr, cc, drr, dcc))
-            q.append((rr, cc, drr, dcc))
+    for (r_prev, c_prev, dr_prev, dc_prev) in prev[r, c, dr, dc]:
+        if (r_prev, c_prev, dr_prev, dc_prev) not in seen:
+            seen.add((r_prev, c_prev, dr_prev, dc_prev))
+            q.append((r_prev, c_prev, dr_prev, dc_prev))
 
 ans2 = len({(r, c) for r, c, _, _ in seen})
 print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
