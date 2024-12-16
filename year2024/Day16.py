@@ -3,7 +3,7 @@ from heapq import heappop, heappush
 
 time_start = time()
 
-INPUT_FILE = "./year2024/data/day16extra.txt"
+INPUT_FILE = "./year2024/data/day16.txt"
 grid = [list(line.rstrip("\n")) for line in open(INPUT_FILE, "r")]
 R, C = len(grid), len(grid[0])
 
@@ -67,8 +67,8 @@ while q:
 
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
-seen = {(r_end, c_end, dir) for dir in range(4)}
-q = [(r_end, c_end, dir) for dir in range(4)]
+seen = {(r_end, c_end, dir) for dir in range(4) if dist[idx(r_end, c_end, dir)] == ans1}
+q = [(r_end, c_end, dir) for dir in range(4) if dist[idx(r_end, c_end, dir)] == ans1]
 while q:
     r, c, dir = q.pop()
     for (r_prev, c_prev, dir_prev) in prev[idx(r, c, dir)]:
