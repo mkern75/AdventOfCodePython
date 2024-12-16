@@ -45,7 +45,7 @@ while q:
             if d + cost < dist_next:
                 heappush(q, (d + cost, r_next, c_next, dr_next, dc_next))
                 dist[r_next, c_next, dr_next, dc_next] = d + cost
-                prev[r_next, c_next, dr_next, dc_next].add((r, c, dr, dc))
+                prev[r_next, c_next, dr_next, dc_next] = {(r, c, dr, dc)}
             elif d + cost == dist_next:
                 prev[r_next, c_next, dr_next, dc_next].add((r, c, dr, dc))
 
