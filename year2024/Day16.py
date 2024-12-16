@@ -3,7 +3,7 @@ from heapq import heappop, heappush
 
 time_start = time()
 
-INPUT_FILE = "./year2024/data/day16.txt"
+INPUT_FILE = "./year2024/data/day16extra.txt"
 grid = [list(line.rstrip("\n")) for line in open(INPUT_FILE, "r")]
 R, C = len(grid), len(grid[0])
 
@@ -72,7 +72,7 @@ q = [(r_end, c_end, dir) for dir in range(4)]
 while q:
     r, c, dir = q.pop()
     for (r_prev, c_prev, dir_prev) in prev[idx(r, c, dir)]:
-        if idx(r_prev, c_prev, dir_prev) not in seen:
+        if (r_prev, c_prev, dir_prev) not in seen:
             seen.add((r_prev, c_prev, dir_prev))
             q.append((r_prev, c_prev, dir_prev))
 
