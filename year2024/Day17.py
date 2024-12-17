@@ -63,19 +63,19 @@ print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 def solve(reg_a_val, pos):
     """This works for my inputs, not necessarily for others."""
     target = program[pos]
+    res = []
     for v in range(8):
         register_tmp = register.copy()
         register_tmp["A"] = reg_a_val | v
         out = run(program, register_tmp)
         if out[0] == target:
             if pos == 0:
-                return reg_a_val | v
+                res.append(reg_a_val | v)
             else:
-                res = solve((reg_a_val | v) << 3, pos - 1)
-                if res is not None:
-                    return res
-    return None
+                res.extend(solve((reg_a_val | v) << 3, pos - 1))
+    return res
 
 
-ans2 = solve(0, len(program) - 1)
+candidates = solve(0, len(program) - 1)
+ans2 = min(candidates)
 print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
