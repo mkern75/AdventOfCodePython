@@ -65,7 +65,7 @@ def solve(reg_a_val, pos):
     target = program[pos]
     for v in range(8):
         register_tmp = register.copy()
-        register_tmp["A"] = reg_a_val ^ v
+        register_tmp["A"] = reg_a_val | v
         out = run(program, register_tmp)
         if out[0] == target:
             if pos == 0:
