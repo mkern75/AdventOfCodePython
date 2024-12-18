@@ -30,27 +30,24 @@ def run(program, register):
 
         if instr == 0:
             register["A"] = register["A"] >> combo
-            ip += 2
         elif instr == 1:
             register["B"] = register["B"] ^ literal
-            ip += 2
         elif instr == 2:
             register["B"] = combo % 8
-            ip += 2
         elif instr == 3:
-            ip = literal if register["A"] != 0 else ip + 2
+            if register["A"]:
+                ip = literal
+                continue
         elif instr == 4:
             register["B"] = register["B"] ^ register["C"]
-            ip += 2
         elif instr == 5:
             out += [combo % 8]
-            ip += 2
         elif instr == 6:
             register["B"] = register["A"] >> combo
-            ip += 2
         elif instr == 7:
             register["C"] = register["A"] >> combo
-            ip += 2
+
+        ip += 2
 
     return out
 
@@ -60,22 +57,16 @@ ans1 = ",".join(map(str, output1))
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
 
-def solve(reg_a_val, pos):
-    """This works for my inputs, not necessarily for others."""
-    target = program[pos]
+def solve(register_a_so_far, pos):
     res = []
     for v in range(8):
-        register_tmp = register.copy()
-        register_tmp["A"] = reg_a_val | v
-        out = run(program, register_tmp)
-        if out[0] == target:
-            if pos == 0:
-                res.append(reg_a_val | v)
-            else:
-                res.extend(solve((reg_a_val | v) << 3, pos - 1))
+        out = run(program, {"A": register_a_so_far | v, "B": 0, "C": 0})
+        if out[0] == program[pos]:
+            res.extend([register_a_so_far | v] if pos == 0 else solve((register_a_so_far | v) << 3, pos - 1))
     return res
 
 
 candidates = solve(0, len(program) - 1)
 ans2 = min(candidates)
 print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
+
