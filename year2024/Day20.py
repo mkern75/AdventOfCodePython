@@ -42,14 +42,16 @@ normal_time = dist_start[r_end][c_end]
 def solve(max_cheat, min_saving):
     res = 0
     for r in range(R):
-        for rn in range(max(0, r - max_cheat), min(R, r + max_cheat + 1)):
-            dr = abs(r - rn)
-            cheat_remaining = max_cheat - dr
-            for c in range(C):
+        for c in range(C):
+            if grid[r][c] == "#":
+                continue
+            for rn in range(max(0, r - max_cheat), min(R, r + max_cheat + 1)):
+                dr = abs(r - rn)
+                cheat_remaining = max_cheat - dr
                 for cn in range(max(0, c - cheat_remaining), min(C, c + cheat_remaining + 1)):
-                    dc = abs(c - cn)
                     if grid[rn][cn] == "#":
                         continue
+                    dc = abs(c - cn)
                     cheat_step = dr + dc
                     cheat_time = dist_start[r][c] + cheat_step + dist_end[rn][cn]
                     if cheat_time <= normal_time - min_saving:
