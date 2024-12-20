@@ -9,18 +9,6 @@ grid = [list(line.rstrip("\n")) for line in open(INPUT_FILE, "r")]
 R, C = len(grid), len(grid[0])
 
 
-def valid_row(r):
-    return 0 <= r and r < R
-
-
-def valid_col(c):
-    return 0 <= c and c < C
-
-
-def valid(r, c):
-    return valid_row(r) and valid_col(c)
-
-
 def find(target):
     for r in range(R):
         for c in range(C):
@@ -35,9 +23,10 @@ def calc_dist(r_start, c_start):
     bfs = [(r_start, c_start)]
     for r, c in bfs:
         for rn, cn in [(r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)]:
-            if valid(rn, cn) and grid[rn][cn] != "#" and dist[rn][cn] == INF:
-                dist[rn][cn] = dist[r][c] + 1
-                bfs.append((rn, cn))
+            if 0 <= r and r < R and 0 <= c and c < C:
+                if grid[rn][cn] != "#" and dist[rn][cn] == INF:
+                    dist[rn][cn] = dist[r][c] + 1
+                    bfs.append((rn, cn))
     return dist
 
 
@@ -53,20 +42,16 @@ normal_time = dist_start[r_end][c_end]
 def solve(max_cheat, min_saving):
     res = 0
     for r in range(R):
-        for dr in range(-max_cheat, max_cheat + 1):
-            rn = r + dr
-            if not valid_row(rn):
-                continue
-            cheat_remaining = max_cheat - abs(dr)
+        for rn in range(max(0, r - max_cheat), min(R, r + max_cheat + 1)):
+            dr = abs(r - rn)
+            cheat_remaining = max_cheat - dr
             for c in range(C):
-                for dc in range(-cheat_remaining, cheat_remaining + 1):
-                    cn = c + dc
-                    if not valid_col(cn):
-                        continue
+                for cn in range(max(0, c - cheat_remaining), min(C, c + cheat_remaining + 1)):
+                    dc = abs(c - cn)
                     if grid[rn][cn] == "#":
                         continue
-                    cheat_dist = abs(dr) + abs(dc)
-                    cheat_time = dist_start[r][c] + cheat_dist + dist_end[rn][cn]
+                    cheat_step = dr + dc
+                    cheat_time = dist_start[r][c] + cheat_step + dist_end[rn][cn]
                     if cheat_time <= normal_time - min_saving:
                         res += 1
     return res
