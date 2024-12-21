@@ -23,21 +23,21 @@ def build_shortest_paths_between_keys(key1, key2, keypad):
     rx, cx = find_position("X", keypad)
     dr, dc = r2 - r1, c2 - c1
 
-    row_moves = "v" * abs(dr) if dr >= 0 else "^" * abs(dr)
-    col_moves = ">" * abs(dc) if dc >= 0 else "<" * abs(dc)
+    row_move = "v" * abs(dr) if dr >= 0 else "^" * abs(dr)
+    col_move = ">" * abs(dc) if dc >= 0 else "<" * abs(dc)
 
     if dr == dc == 0:
         return [""]
     elif dr == 0:
-        return [col_moves]
+        return [col_move]
     elif dc == 0:
-        return [row_moves]
+        return [row_move]
     elif (rx, cx) == (r1, c2):
-        return [row_moves + col_moves]
+        return [row_move + col_move]
     elif (rx, cx) == (r2, c1):
-        return [col_moves + row_moves]
+        return [col_move + row_move]
     else:
-        return [row_moves + col_moves, col_moves + row_moves]
+        return [row_move + col_move, col_move + row_move]
 
 
 def build_sequence_of_shortest_paths(seq, keypad):
@@ -48,27 +48,27 @@ def build_sequence_of_shortest_paths(seq, keypad):
 
 
 @cache
-def solve(seq, depth):
-    if depth == 1:
+def calc(seq, depth):
+    if depth == 0:
         return len(seq)
+    return solve(build_sequence_of_shortest_paths(seq, keypad_directional), depth - 1)
 
-    if any(c in seq for c in "012345679"):
-        keypad = keypad_numeric
-    else:
-        keypad = keypad_directional
 
+def solve(seq_shortest_paths, depth):
     res = 0
-    for shortest_paths in build_sequence_of_shortest_paths(seq, keypad):
-        res += min(solve(sp, depth - 1) for sp in shortest_paths)
+    for shortest_paths in seq_shortest_paths:
+        res += min(calc(sp, depth) for sp in shortest_paths)
     return res
 
 
 ans1 = 0
 for line in data:
-    ans1 += solve(line, 1 + 2 + 1) * int(line[:3])
+    seq_sp_initial = build_sequence_of_shortest_paths(line, keypad_numeric)
+    ans1 += solve(seq_sp_initial, 2) * int(line[:3])
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
 ans2 = 0
 for line in data:
-    ans2 += solve(line, 1 + 25 + 1) * int(line[:3])
+    seq_sp_initial = build_sequence_of_shortest_paths(line, keypad_numeric)
+    ans2 += solve(seq_sp_initial, 25) * int(line[:3])
 print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
