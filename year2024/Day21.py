@@ -6,8 +6,8 @@ INPUT_FILE = "./year2024/data/day21.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
 GAP = "X"
-keypad_numeric = ["789", "456", "123", "X0A"]
-keypad_directional = ["X^A", "<v>"]
+KEYPAD_NUMERIC = ["789", "456", "123", "X0A"]
+KEYPAD_DIRECTIONAL = ["X^A", "<v>"]
 
 
 def find_position(key, keypad):
@@ -20,11 +20,10 @@ def find_position(key, keypad):
 def shortest_paths_between_keys(key1, key2, keypad):
     r1, c1 = find_position(key1, keypad)
     r2, c2 = find_position(key2, keypad)
-    r_gap, c_gap = find_position(GAP, keypad)
     dr, dc = r2 - r1, c2 - c1
 
-    row_moves = "v" * abs(dr) if dr >= 0 else "^" * abs(dr)
-    col_moves = ">" * abs(dc) if dc >= 0 else "<" * abs(dc)
+    row_moves = "v" * dr if dr >= 0 else "^" * (-dr)
+    col_moves = ">" * dc if dc >= 0 else "<" * (-dc)
 
     if dr == dc == 0:
         return [""]
@@ -32,9 +31,9 @@ def shortest_paths_between_keys(key1, key2, keypad):
         return [col_moves]
     elif dc == 0:
         return [row_moves]
-    elif (r1, c2) == (r_gap, c_gap):
+    elif keypad[r1][c2] == GAP:
         return [row_moves + col_moves]
-    elif (r2, c1) == (r_gap, c_gap):
+    elif keypad[r2][c1] == GAP:
         return [col_moves + row_moves]
     else:
         return [row_moves + col_moves, col_moves + row_moves]
@@ -46,14 +45,14 @@ def button_presses(seq, depth):
         return len(seq)
 
     if any(c in seq for c in "012345679"):
-        keypad = keypad_numeric
+        keypad = KEYPAD_NUMERIC
     else:
-        keypad = keypad_directional
+        keypad = KEYPAD_DIRECTIONAL
 
     res = 0
     for key1, key2 in zip("A" + seq, seq):
-        shortest_paths = [sp + "A" for sp in shortest_paths_between_keys(key1, key2, keypad)]
-        res += min(button_presses(sp, depth - 1) for sp in shortest_paths)
+        shortest_paths = shortest_paths_between_keys(key1, key2, keypad)
+        res += min(button_presses(sp + "A", depth - 1) for sp in shortest_paths)
     return res
 
 
