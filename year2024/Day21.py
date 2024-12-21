@@ -15,10 +15,9 @@ def find_position(key, keypad):
         for c, char in enumerate(row):
             if char == key:
                 return r, c
-    assert False
 
 
-def build_shortest_paths_between_keys(key1, key2, keypad):
+def shortest_paths_between_keys(key1, key2, keypad):
     r1, c1 = find_position(key1, keypad)
     r2, c2 = find_position(key2, keypad)
     r_gap, c_gap = find_position(GAP, keypad)
@@ -41,15 +40,8 @@ def build_shortest_paths_between_keys(key1, key2, keypad):
         return [row_moves + col_moves, col_moves + row_moves]
 
 
-def build_sequence_of_shortest_paths(seq, keypad):
-    res = []
-    for key1, key2 in zip("A" + seq, seq):
-        res += [[sp + "A" for sp in build_shortest_paths_between_keys(key1, key2, keypad)]]
-    return res
-
-
 @cache
-def solve(seq, depth):
+def button_presses(seq, depth):
     if depth == 1:
         return len(seq)
 
@@ -59,17 +51,18 @@ def solve(seq, depth):
         keypad = keypad_directional
 
     res = 0
-    for shortest_paths in build_sequence_of_shortest_paths(seq, keypad):
-        res += min(solve(sp, depth - 1) for sp in shortest_paths)
+    for key1, key2 in zip("A" + seq, seq):
+        shortest_paths = [sp + "A" for sp in shortest_paths_between_keys(key1, key2, keypad)]
+        res += min(button_presses(sp, depth - 1) for sp in shortest_paths)
     return res
 
 
-ans1 = 0
-for code in data:
-    ans1 += solve(code, 1 + 2 + 1) * int(code[:3])
+def complexity(code, n_keypads):
+    return button_presses(code, n_keypads) * int(code[:3])
+
+
+ans1 = sum(complexity(code, 1 + 2 + 1) for code in data)
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
-ans2 = 0
-for code in data:
-    ans2 += solve(code, 1 + 25 + 1) * int(code[:3])
+ans2 = sum(complexity(code, 1 + 25 + 1) for code in data)
 print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
