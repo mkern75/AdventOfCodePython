@@ -35,7 +35,7 @@ for buyer_id, secret_number in enumerate(numbers, start=1):
 
     # Each change is between -9 and +9.
     # By adding 9, this range becomes 0 to +18 which fits into 5 bits.
-    # This allows us to map each possible tuple of 4 changes onto a distict index between 0 and 2**20.
+    # This allows us to map each possible tuple of 4 changes onto a distinct index between 0 and 2**20.
     # This significantly speeds the calculations up (tuples are slow).
     for i in range(4, N + 1):
         h = ((d[i - 3] + 9) << 15) | ((d[i - 2] + 9) << 10) | ((d[i - 1] + 9) << 5) | (d[i] + 9)
