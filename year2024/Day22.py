@@ -25,6 +25,7 @@ res = [0] * (1 << 20)
 ans1 = 0
 for buyer_id, secret_number in enumerate(numbers, start=1):
     x[0] = secret_number
+    b[0] = x[0] % 10
     for i in range(1, N + 1):
         x[i] = update(x[i - 1])
         b[i] = x[i] % 10
