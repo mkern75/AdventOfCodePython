@@ -19,8 +19,8 @@ def update(x):
 x = [0] * (N + 1)  # secret numbers
 b = [0] * (N + 1)  # prices
 d = [0] * (N + 1)  # deltas
-seen = [-1] * (1 << 24)
-res = [0] * (1 << 24)
+seen = [-1] * (1 << 20)
+res = [0] * (1 << 20)
 
 ans1 = 0
 for buyer_id, secret_number in enumerate(numbers):
@@ -33,11 +33,11 @@ for buyer_id, secret_number in enumerate(numbers):
     ans1 += x[N]
 
     # Each change is between -9 and +9.
-    # By adding 9, this range becomes 0 to +18 which fits into 6 bits.
-    # This allows us to map each possible tuple of 4 changes onto a distict index between 0 and 2**24.
+    # By adding 9, this range becomes 0 to +18 which fits into 5 bits.
+    # This allows us to map each possible tuple of 4 changes onto a distict index between 0 and 2**20.
     # This significantly speeds the calculations up (tuples are slow).
     for i in range(4, N + 1):
-        h = ((d[i - 3] + 9) << 18) | ((d[i - 2] + 9) << 12) | ((d[i - 1] + 9) << 6) | (d[i] + 9)
+        h = ((d[i - 3] + 9) << 15) | ((d[i - 2] + 9) << 10) | ((d[i - 1] + 9) << 5) | (d[i] + 9)
         if seen[h] != buyer_id:
             seen[h] = buyer_id
             res[h] += b[i]
