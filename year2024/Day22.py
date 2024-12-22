@@ -19,11 +19,11 @@ def update(x):
 x = [0] * (N + 1)  # secret numbers
 b = [0] * (N + 1)  # prices
 d = [0] * (N + 1)  # deltas
-seen = [-1] * (1 << 20)
+seen = [0] * (1 << 20)
 res = [0] * (1 << 20)
 
 ans1 = 0
-for buyer_id, secret_number in enumerate(numbers):
+for buyer_id, secret_number in enumerate(numbers, start=1):
     x[0] = secret_number
     for i in range(1, N + 1):
         x[i] = update(x[i - 1])
