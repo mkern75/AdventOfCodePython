@@ -1,7 +1,8 @@
-from collections import defaultdict
 from time import time
+from collections import defaultdict
 
 time_start = time()
+
 INPUT_FILE = "./year2024/data/day23.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
@@ -11,40 +12,47 @@ for line in data:
     graph[a].add(b)
     graph[b].add(a)
 
-nodes = list(graph.keys())
-nodes_t = [node for node in nodes if node.startswith("t")]
-
+nodes = set(graph.keys())
+nodes_t = {n for n in nodes if n.startswith("t")}
 cliques_3t = set()
+
 for node1 in nodes_t:
-    for node2 in nodes:
-        if node2 == node1 or not node2 in graph[node1]:
-            continue
-        for node3 in nodes:
-            if node3 == node1 or node3 == node2 or not node3 in graph[node1] or not node3 in graph[node2]:
-                continue
-            cliques_3t.add(tuple(sorted((node1, node2, node3))))
+    for node2 in graph[node1]:
+        for node3 in graph[node1]:
+            if node3 in graph[node2]:
+                cliques_3t.add(tuple(sorted((node1, node2, node3))))
 
 ans1 = len(cliques_3t)
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
 
-def bron_kerbosch(current_clique, nodes_to_explore, nodes_excluded, graph):
-    if not nodes_to_explore and not nodes_excluded:
-        yield current_clique
-    while nodes_to_explore:
-        v = nodes_to_explore.pop()
-        yield from bron_kerbosch(
-            current_clique.union({v}),
-            nodes_to_explore.intersection(graph[v]),
-            nodes_excluded.intersection(graph[v]),
-            graph
-        )
-        nodes_excluded.add(v)
+def max_cliques_bron_kerbosch_with_pivot(graph):
+    """Bron–Kerbosch algorithm with pivoting for finding all maximal cliques in an undirected graph.
+       See: https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm#With_pivoting"""
+    cliques = []
+    stack = [(set(), set(graph.keys()), set())]
+    while stack:
+        r, p, x = stack.pop()
+        if not p and not x:
+            cliques.append(r)
+        else:
+            stack_tmp = []
+            if p:
+                u = None  # pivot
+                for v in p:
+                    if u is None or len(graph[v]) > len(graph[u]):
+                        u = v
+                pp = [v for v in p if v not in graph[u]]
+                while pp:
+                    v = pp.pop()
+                    stack_tmp += [(r.union({v}), p.intersection(graph[v]), x.intersection(graph[v]))]
+                    x.add(v)
+            stack.extend(stack_tmp[::-1])
+    return cliques
 
 
-cliques_all = list(bron_kerbosch(set(), set(graph.keys()), set(), graph))
 max_clique = set()
-for clique in cliques_all:
+for clique in max_cliques_bron_kerbosch_with_pivot(graph):
     if len(clique) > len(max_clique):
         max_clique = clique
 
