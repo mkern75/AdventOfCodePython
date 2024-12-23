@@ -36,18 +36,15 @@ def max_cliques_bron_kerbosch_with_pivot(graph):
         if not p and not x:
             cliques.append(r)
         else:
-            stack_tmp = []
-            if p:
-                u = None  # pivot
-                for v in p:
-                    if u is None or len(graph[v]) > len(graph[u]):
-                        u = v
-                pp = [v for v in p if v not in graph[u]]
-                while pp:
-                    v = pp.pop()
-                    stack_tmp += [(r.union({v}), p.intersection(graph[v]), x.intersection(graph[v]))]
-                    x.add(v)
-            stack.extend(stack_tmp[::-1])
+            u = None  # pivot
+            for v in p:
+                if u is None or len(graph[v]) > len(graph[u]):
+                    u = v
+            pp = [v for v in p if v not in graph[u]]
+            while pp:
+                v = pp.pop()
+                stack += [(r.union({v}), p.intersection(graph[v]), x.intersection(graph[v]))]
+                x.add(v)
     return cliques
 
 
