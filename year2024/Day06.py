@@ -26,6 +26,10 @@ ans1 = len(seen_p1)
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
 
+def state_idx(r, c, dir):
+    return dir * R * C + r * C + c
+
+
 def check_loop_p2(cycle, seen):
     r, c, dir = r_start, c_start, 0
     dr, dc = DIR[dir]
@@ -36,13 +40,13 @@ def check_loop_p2(cycle, seen):
         r, c = r + dr, c + dc
         if r < 0 or R <= r or c < 0 or C <= c:
             return 0
-        if seen[r][c][dir] == cycle:
+        if seen[state_idx(r, c, dir)] == cycle:
             return 1
-        seen[r][c][dir] = cycle
+        seen[state_idx(r, c, dir)] = cycle
 
 
 ans2 = 0
-seen = [[[0] * len(DIR) for _ in range(C)] for _ in range(R)]
+seen = [0] * (4 * R * C)
 cycle = 0
 for r_obstr, c_obstr in seen_p1:
     if r_obstr == r_start and c_obstr == c_start:
@@ -52,5 +56,3 @@ for r_obstr, c_obstr in seen_p1:
     ans2 += check_loop_p2(cycle, seen)
     grid[r_obstr][c_obstr] = "."
 print(f"part 2: {ans2}  ({time() - time_start:.3f}s)")
-
-
