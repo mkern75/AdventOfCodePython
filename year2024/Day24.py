@@ -1,6 +1,5 @@
 from time import time
-from collections import defaultdict, Counter
-from collections import deque
+from collections import defaultdict, Counter, deque
 import operator
 
 time_start = time()
