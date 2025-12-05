@@ -6,11 +6,7 @@ blocks = [block.splitlines() for block in open(INPUT_FILE, "r").read().split("\n
 
 id_ranges = [tuple(map(int, line.split("-"))) for line in blocks[0]]
 
-ans1 = 0
-for line in blocks[1]:
-    id = int(line)
-    if any(x <= id <= y for x, y in id_ranges):
-        ans1 += 1
+ans1 = sum(any(x <= int(line) <= y for x, y in id_ranges) for line in blocks[1])
 print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 
 ans2 = 0
