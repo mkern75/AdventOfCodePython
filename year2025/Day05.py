@@ -13,9 +13,9 @@ ans2 = 0
 id_ranges.sort()
 lo, hi = id_ranges[0]
 for x, y in id_ranges:
-    if x <= hi <= y:
-        hi = y
-    elif hi < x:
+    if x <= hi + 1:
+        hi = max(hi, y)
+    else:
         ans2 += hi - lo + 1
         lo, hi = x, y
 ans2 += hi - lo + 1
