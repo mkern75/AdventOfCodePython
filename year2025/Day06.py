@@ -16,10 +16,10 @@ idx.append(max(len(row) for row in data[:-1]) + 1)
 
 ans1, ans2 = 0, 0
 for i, op in enumerate(ops):
-    width = idx[i + 1] - idx[i]
+    width = idx[i + 1] - idx[i] - 1
     nums1 = [int(data[j][idx[i]:idx[i] + width]) for j in range(n)]
     nums2 = []
-    for k in range(width - 1):
+    for k in range(width):
         s = []
         for j in range(n):
             if idx[i] + k < len(data[j]) and data[j][idx[i] + k] in "0123456789":
