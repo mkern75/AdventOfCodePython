@@ -1,22 +1,20 @@
 from time import time
-from collections import Counter
+from collections import defaultdict, Counter
 
 time_start = time()
 INPUT_FILE = "./year2025/data/day07.txt"
-grid = [list(line.rstrip("\n")) for line in open(INPUT_FILE, "r")]
-n_rows, n_cols = len(grid), len(grid[0])
+data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
+grid = defaultdict(lambda: ".", {(r, c): v for r, row in enumerate(data) for c, v in enumerate(row)})
 
 ans1 = 0
-cnt = Counter({grid[0].index("S"): 1})
-for r in range(n_rows - 1):
+cnt = Counter({data[0].index("S"): 1})
+for r in range(len(data) - 1):
     cnt_new = Counter()
     for c, v in cnt.items():
-        if grid[r + 1][c] == "^":
+        if grid[r + 1, c] == "^":
             ans1 += 1
-            if 0 <= c - 1:
-                cnt_new[c - 1] += v
-            if c + 1 < n_cols:
-                cnt_new[c + 1] += v
+            cnt_new[c - 1] += v
+            cnt_new[c + 1] += v
         else:
             cnt_new[c] += v
     cnt = cnt_new
