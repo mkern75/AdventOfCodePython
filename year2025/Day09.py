@@ -51,7 +51,7 @@ pp = [(x_compression.compressed_value(x), y_compression.compressed_value(y)) for
 # build set of coordinates that are inside the area
 inside = set()
 
-# walk along circumference
+# walk along the perimeter
 for i in range(n):
     x1, y1 = pp[i]
     x2, y2 = pp[(i + 1) % n]
