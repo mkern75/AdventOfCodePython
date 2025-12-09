@@ -119,3 +119,16 @@ def is_prime(n):
             return False
         f += 6
     return True
+
+
+def neighbours4(r, c, n_rows, n_cols):
+    for rn, cn in [(r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)]:
+        if 0 <= rn < n_rows and 0 <= cn < n_cols:
+            yield rn, cn
+
+
+def neighbours8(r, c, n_rows, n_cols):
+    for rn, cn in [(r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1),
+                   (r - 1, c - 1), (r - 1, c + 1), (r + 1, c - 1), (r + 1, c + 1)]:
+        if 0 <= rn < n_rows and 0 <= cn < n_cols:
+            yield rn, cn
