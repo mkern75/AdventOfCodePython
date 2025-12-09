@@ -82,7 +82,7 @@ def check_inside(x1, y1, x2, y2):
             return False
         if (x2, y) not in inside:
             return False
-    for x in range(min(x1, x2), max(x1, x2 + 1) + 1):
+    for x in range(min(x1, x2), max(x1, x2) + 1):
         if (x, y1) not in inside:
             return False
         if (x, y2) not in inside:
