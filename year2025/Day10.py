@@ -3,7 +3,7 @@ from time import time
 INF = 1 << 31
 
 time_start = time()
-INPUT_FILE = "./year2025/data/day01.txt"
+INPUT_FILE = "./year2025/data/day10.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
 
