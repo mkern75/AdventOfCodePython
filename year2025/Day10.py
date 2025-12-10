@@ -1,10 +1,9 @@
-
 from time import time
 
 INF = 1 << 31
 
 time_start = time()
-INPUT_FILE = "./year2025/data/day10.txt"
+INPUT_FILE = "./year2025/data/day01.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
 
@@ -60,26 +59,26 @@ print(f"part 1: {ans1}  ({time() - time_start:.3f}s)")
 class Part2:
 
     def __init__(self, joltage, wirings):
-        self.n_buttons = len(joltage)
+        self.n_joltages = len(joltage)
         self.joltage = joltage
         self.n_wirings = len(wirings)
         self.wirings = wirings
-        self.cnt_wirings_remaining = [[0] * self.n_buttons for _ in range(self.n_wirings + 1)]
+        self.cnt_wirings_remaining = [[0] * self.n_joltages for _ in range(self.n_wirings + 1)]
         self.res = INF
 
     def reorder_wirings(self):
         todo = self.wirings[:]
         res = []
         while todo:
-            cnt = [0] * self.n_buttons
+            cnt = [0] * self.n_joltages
             for wiring in todo:
-                for button in wiring:
-                    cnt[button] += 1
+                for id in wiring:
+                    cnt[id] += 1
             mn = min(x for x in cnt if x > 0)
-            button = cnt.index(mn)
+            id = cnt.index(mn)
             next_wiring = None
             for wiring in todo:
-                if button in wiring:
+                if id in wiring:
                     if next_wiring is None or len(wiring) > len(next_wiring):
                         next_wiring = wiring
             res.append(next_wiring)
@@ -88,7 +87,7 @@ class Part2:
 
     def calc_wiring_remaining_per_button(self):
         for i in range(self.n_wirings - 1, -1, -1):
-            for j in range(self.n_buttons):
+            for j in range(self.n_joltages):
                 self.cnt_wirings_remaining[i][j] += self.cnt_wirings_remaining[i + 1][j]
             for j in self.wirings[i]:
                 self.cnt_wirings_remaining[i][j] += 1
@@ -100,32 +99,33 @@ class Part2:
         self.optimise(self.joltage)
         return self.res
 
-    def optimise(self, target_remaining, idx_wiring=0, button_presses_so_far=0):
+    def optimise(self, target_remaining, idx_wiring=0, presses_so_far=0):
 
-        if button_presses_so_far >= self.res:
+        if presses_so_far >= self.res:
             return
-        if button_presses_so_far + max(target_remaining) >= self.res:
+
+        if presses_so_far + max(target_remaining) >= self.res:
             return
 
         if idx_wiring == self.n_wirings:
             if all(x == 0 for x in target_remaining):
-                self.res = button_presses_so_far
+                self.res = presses_so_far
             return
 
         mn, mx = 0, INF
-        for button in self.wirings[idx_wiring]:
-            mx = min(mx, target_remaining[button])
-            if self.cnt_wirings_remaining[idx_wiring][button] == 1:
-                mn = max(mn, target_remaining[button])
+        for id in self.wirings[idx_wiring]:
+            mx = min(mx, target_remaining[id])
+            if self.cnt_wirings_remaining[idx_wiring][id] == 1:
+                mn = max(mn, target_remaining[id])
 
         if mn > mx:
             return
 
         for presses in range(mn, mx + 1):
             target_new = target_remaining[:]
-            for button in self.wirings[idx_wiring]:
-                target_new[button] -= presses
-            self.optimise(target_new, idx_wiring + 1, button_presses_so_far + presses)
+            for id in self.wirings[idx_wiring]:
+                target_new[id] -= presses
+            self.optimise(target_new, idx_wiring + 1, presses_so_far + presses)
 
 
 ans2 = 0
