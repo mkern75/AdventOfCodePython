@@ -66,7 +66,7 @@ i2 = (i1 + 1) % n if pp[(i1 + 1) % n][0] == x_max else (i1 - 1) % n
 if pp[i1][1] < pp[i2][1]:
     q = [(pp[i1][0] - 1, pp[i1][1] + 1)]
 else:
-    q = [(pp[i1][0] - 1, pp[[i1][1] - 1])]
+    q = [(pp[i1][0] - 1, pp[i1][1] - 1)]
 assert q[0] not in inside
 inside.add((q[0]))
 for x, y in q:
