@@ -121,7 +121,7 @@ class Part2:
         if mn > mx:
             return
 
-        for presses in range(mn, mx + 1):
+        for presses in range(mx, mn - 1, -1):
             target_new = target_remaining[:]
             for id in self.buttons[idx_button]:
                 target_new[id] -= presses
