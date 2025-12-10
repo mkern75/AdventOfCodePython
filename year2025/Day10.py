@@ -104,6 +104,8 @@ class Part2:
 
         if button_presses_so_far >= self.res:
             return
+        if button_presses_so_far + max(target_remaining) >= self.res:
+            return
 
         if idx_wiring == self.n_wirings:
             if all(x == 0 for x in target_remaining):
