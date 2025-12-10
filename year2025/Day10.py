@@ -85,7 +85,7 @@ class Part2:
             todo.remove(next_wiring)
         self.wirings = res
 
-    def calc_wiring_remaining_per_button(self):
+    def calc_wiring_remaining_per_id(self):
         for i in range(self.n_wirings - 1, -1, -1):
             for j in range(self.n_joltages):
                 self.cnt_wirings_remaining[i][j] += self.cnt_wirings_remaining[i + 1][j]
@@ -94,7 +94,7 @@ class Part2:
 
     def solve(self):
         self.reorder_wirings()
-        self.calc_wiring_remaining_per_button()
+        self.calc_wiring_remaining_per_id()
         self.res = INF
         self.optimise(self.joltage)
         return self.res
