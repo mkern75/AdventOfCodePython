@@ -1,43 +1,21 @@
 from time import time
-from collections import defaultdict, Counter
+from collections import defaultdict
+from functools import cache
 
 time_start = time()
 
 INPUT_FILE = "./year2025/data/day11.txt"
 data = [line.rstrip("\n") for line in open(INPUT_FILE, "r")]
 
-nodes, edges = set(), defaultdict(list)
+edges = defaultdict(list)
 for line in data:
     src, other = line.split(": ")
-    nodes.add(src)
-    for dest in other.split():
-        nodes.add(dest)
-        edges[src].append(dest)
-
-# topological sort Kahn
-in_degree = Counter()
-for e in edges.values():
-    for v in e:
-        in_degree[v] += 1
-topo_sort = []
-stack = [node for node in nodes if in_degree[node] == 0]
-while stack:
-    v = stack.pop()
-    topo_sort += [v]
-    for u in edges[v]:
-        in_degree[u] -= 1
-        if in_degree[u] == 0:
-            stack += [u]
-assert len(topo_sort) == len(nodes)
+    edges[src] = other.split()
 
 
+@cache
 def n_paths(src, dest):
-    cnt = Counter()
-    cnt[src] = 1
-    for a in topo_sort:
-        for b in edges[a]:
-            cnt[b] += cnt[a]
-    return cnt[dest]
+    return 1 if src == dest else sum(n_paths(x, dest) for x in edges[src])
 
 
 ans1 = n_paths("you", "out")
